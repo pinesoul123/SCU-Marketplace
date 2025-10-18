@@ -1,7 +1,11 @@
+* {
+  --white: #ffffff;
+  --light-grey: #e6e6e6;
+  --black: #000000;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 0;
   text-align: center;
 }
 
@@ -39,4 +43,24 @@
 
 .read-the-docs {
   color: #888;
+}
+
+#navbar {
+  width: 100%;
+  height: 90px;
+  display: flex;
+  align-items: center;  
+  background-color: var(--white);
+}
+
+#navbar a {
+  margin: 0 12px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  color: var(--black);
+  transition: 0.2s;
+}
+
+#navbar a:hover {
+  background-color: var(--light-grey);
 }

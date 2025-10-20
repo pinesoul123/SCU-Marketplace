@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import Feed from "./pages/Feed";
+import Market from "./pages/Market";
 import CreateListing from "./pages/CreateListing";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
@@ -30,7 +30,8 @@ function App() {
       </nav>
 
       <Routes>
-        <Route path="/" element={<Feed />} />
+        <Route path="/" element={<Market />} />
+        <Route path="/market" element={<Market />} />
         <Route path="/new" element={<CreateListing />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/account" element={<Account />} />

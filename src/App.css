@@ -11,6 +11,11 @@
   /* text-align: center; */
 }
 
+a {
+  color: var(--black);
+  text-decoration: none;
+}
+
 #navbar {
   width: 100%;
   /* height: 90px; */
@@ -112,3 +117,34 @@
 }
 
 
+
+#request-boards-container {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: auto auto;
+}
+
+@media only screen and (max-width: 1050px) {
+  #request-boards-container {
+    grid-template-columns: auto;
+  }
+}
+
+.request-board-button {
+  margin: 0;
+  padding: 15px;
+  border: var(--grey) 1px solid;
+  border-radius: 5px;
+  height: 100px;
+  display: block;
+  transition: 0.2s;
+}
+
+.request-board-button h2 {
+  margin-top: 0;
+}
+
+.request-board-button:hover {
+  cursor: pointer;
+  box-shadow: 0 5px 5px 2px var(--light-grey) ;
+}

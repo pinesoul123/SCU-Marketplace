@@ -1,3 +1,7 @@
 export default function Account() {
-    return <div style={{ padding: 24 }}>Account page</div>;
+  return (
+    <div id="content">
+      <h1>Account</h1>
+    </div>
+  );
 }

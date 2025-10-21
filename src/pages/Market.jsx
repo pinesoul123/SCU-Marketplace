@@ -1,3 +1,12 @@
+import Listing from "../components/Listing.jsx"
+
 export default function Market() {
-  return <div style={{ padding: 24 }}>Market page</div>;
+  return (
+    <div id="content">
+      <h1>Market</h1>
+      <div>
+        <Listing name="Item" price={23}></Listing>
+      </div>
+    </div>
+  );
 }

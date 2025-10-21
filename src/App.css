@@ -8,7 +8,7 @@
 
 #root {
   margin: 0;
-  text-align: center;
+  /* text-align: center; */
 }
 
 #navbar {
@@ -106,3 +106,9 @@
     justify-content:center;
   }
 }
+
+#content {
+  margin: 0 50px;
+}
+
+

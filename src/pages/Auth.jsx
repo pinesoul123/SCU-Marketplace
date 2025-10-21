@@ -1,3 +1,7 @@
 export default function Auth() {
-  return <div style={{ padding: 24 }}>Auth page</div>;
+  return (
+    <div id="content">
+      <h1>Auth</h1>
+    </div>
+  );
 }

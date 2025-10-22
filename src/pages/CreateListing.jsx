@@ -2,7 +2,8 @@ import { createListing } from "../api/listings";
 import { useState } from 'react';
 import "../styles/CreateListing.css"
 
-const categories = [1, 2, 3, 4, 5];
+const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
+const conditions = ["New", "Used - Very Good", "Used - Moderate"];
 
 function Selection({ options, selected, setSelected }) {
   function handleClick(e, option) {
@@ -13,14 +14,14 @@ function Selection({ options, selected, setSelected }) {
   const chips = [];
   for (let option of options) {
     if (option == selected) {
-      chips.push(<button key={option} onClick={(e) => e.preventDefault()}class="selected-chip">{option}</button>);
+      chips.push(<button key={option} class="selected selection-chip" onClick={(e) => e.preventDefault()}>{option}</button>);
     } else {
-      chips.push(<button key={option} onClick={(e) => handleClick(e, option)}>{option}</button>);
+      chips.push(<button key={option} class="selection-chip" onClick={(e) => handleClick(e, option)}>{option}</button>);
     }
   }
 
   return (
-    <div>{chips}</div>
+    <div class="selection-container">{chips}</div>
   )
 }
 
@@ -31,29 +32,36 @@ export default function CreateListing() {
   }
 
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCondition, setSelectedCondition] = useState("");
 
   const listingForm = (
     <form id="listing-form">
-      <div id="form-left">
+      <div>
         <input type="file"></input>
       </div>
-      <div id="form-right">
+      <div>
         <label for="listing-name">Listing Name</label>
         <br></br>
         <input id="listing-name" class="textbox" type="text"></input>
         <br></br><br></br>
         <label for="listing-price">Price</label>
         <br></br>
-        <input id="listing-price" class="textbox" type="text"></input>
+        <input id="listing-price" class="textbox" type="number" step=".01" min="0.00" placeholder="0.00"></input>
         <br></br><br></br>
         <label for="listing-desc">Description</label>
         <br></br>
         <textarea id="listing-desc" class="textbox" ></textarea>
       </div>
-      <div id="form-bottom">
+      <div>
         <label for="listing-category">Category</label>
         <Selection options={categories} selected={selectedCategory} setSelected={setSelectedCategory} />
+      </div>
+      <div>
         <label for="listing-condition">Condition</label>
+        <Selection options={conditions} selected={selectedCondition} setSelected={setSelectedCondition} />
+      </div>
+      <div class="grid-item-wide">
+        <input class="button-red" type="submit" value="Submit"></input>
       </div>
       </form>
   );

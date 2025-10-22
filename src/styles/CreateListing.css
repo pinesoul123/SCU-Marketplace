@@ -16,9 +16,41 @@
 
 #listing-form {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 50% 50%;
+    gap: 10px;
 }
 
-.selected-chip {
-    background-color: blue;
+.grid-item-wide {
+    grid-column: auto / span 2;
+}
+
+.selection-container {
+    display: flex;
+}
+
+.selection-chip {
+    width: 100px;
+    height: 50px;
+    margin: 5px;
+    border: var(--grey) 1px solid;
+    border-radius: 5px;
+    background-color: var(--white);
+    transition: 0.2s;
+    text-align: center;
+    overflow: hidden;
+}
+
+.selection-chip:hover {
+    cursor: pointer;
+    box-shadow: 0 5px 5px 2px var(--light-grey) ;
+}
+
+.selected {
+    color: var(--scu-red);
+    box-shadow: 0 5px 5px 2px rgb(255, 220, 220);
+}
+
+.selected:hover {
+    cursor: default;
+    box-shadow: 0 5px 5px 2px rgb(255, 220, 220);
 }

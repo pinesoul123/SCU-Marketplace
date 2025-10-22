@@ -1,15 +1,9 @@
-import { db, storage, auth } from "../lib/firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
-/**
- * createListing
- * @param {object} data - { title, price, category, condition, description, locationTag }
- * @param {File[]} files - up to 5 images
- * @returns {Promise<string>} new listing doc id
- */
-
 export async function createListing(data, files = []){
+    // Lazy-load firebase bindings only when this function is called
+    const { auth, db, storage } = await import("../lib/firebase.js");
+    const { addDoc, collection, serverTimestamp } = await import("firebase/firestore");
+    const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+    
     const user = auth.currentUser;
     if (!user) throw new Error("Please sign in.");
 

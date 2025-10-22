@@ -5,6 +5,10 @@ import "../styles/CreateListing.css"
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
 const conditions = ["New", "Used - Very Good", "Used - Moderate"];
 
+function publishListing(formData, selectedCategory, selectedCondition) {
+  console.log("form" + formData.get("listing-name"));
+}
+
 function Selection({ options, selected, setSelected }) {
   function handleClick(e, option) {
     setSelected(option);
@@ -21,7 +25,7 @@ function Selection({ options, selected, setSelected }) {
   }
 
   return (
-    <div class="selection-container">{chips}</div>
+    <div class="selection-container">{chips}<input type="text" value="test"></input></div>
   )
 }
 
@@ -35,13 +39,13 @@ export default function CreateListing() {
   const [selectedCondition, setSelectedCondition] = useState("");
 
   const listingForm = (
-    <form id="listing-form">
+    <form id="listing-form" action={(e) => publishListing(e, selectedCategory, selectedCondition)}>
       <div>
         <input type="file"></input>
       </div>
       <div>
         <label for="listing-name">Listing Name</label>
-        <input id="listing-name" class="textbox" type="text"></input>
+        <input id="listing-name" name="listing-name" class="textbox" type="text"></input>
         <br></br>
         <label for="listing-price">Price</label>
         <input id="listing-price" class="textbox" type="number" step=".01" min="0.00" placeholder="0.00"></input>

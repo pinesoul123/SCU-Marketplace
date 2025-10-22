@@ -3,7 +3,7 @@ const boards = ["Graham", "Scipi"]
 
 function Board({ name }) {
     return (
-        <a class="request-board-button" href="">
+        <a class="button request-board-button" href="">
             <h2>{name}</h2>
         </a>
     )

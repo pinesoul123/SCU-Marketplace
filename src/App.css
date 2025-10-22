@@ -16,6 +16,28 @@ a {
   text-decoration: none;
 }
 
+.button {
+  margin: 10px 0;
+  padding: 10px 15px;
+  border: var(--grey) 1px solid;
+  border-radius: 5px;
+  background-color: var(--white);
+  color: var(--black);
+  text-align: center;
+  transition: 0.2s;
+
+}
+
+.button:hover {
+  cursor: pointer;
+  box-shadow: 0 5px 5px 2px var(--light-grey) ;
+}
+
+.red {
+  background-color: var(--scu-red);
+  color: var(--white);
+}
+
 #navbar {
   width: 100%;
   /* height: 90px; */
@@ -132,19 +154,11 @@ a {
 
 .request-board-button {
   margin: 0;
-  padding: 15px;
-  border: var(--grey) 1px solid;
-  border-radius: 5px;
   height: 100px;
   display: block;
-  transition: 0.2s;
+  text-align: left;
 }
 
 .request-board-button h2 {
   margin-top: 0;
-}
-
-.request-board-button:hover {
-  cursor: pointer;
-  box-shadow: 0 5px 5px 2px var(--light-grey) ;
 }

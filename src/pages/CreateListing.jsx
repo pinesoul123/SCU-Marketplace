@@ -14,9 +14,9 @@ function Selection({ options, selected, setSelected }) {
   const chips = [];
   for (let option of options) {
     if (option == selected) {
-      chips.push(<button key={option} class="selected selection-chip" onClick={(e) => e.preventDefault()}>{option}</button>);
+      chips.push(<button key={option} class="selected button selection-chip" onClick={(e) => e.preventDefault()}>{option}</button>);
     } else {
-      chips.push(<button key={option} class="selection-chip" onClick={(e) => handleClick(e, option)}>{option}</button>);
+      chips.push(<button key={option} class="button selection-chip" onClick={(e) => handleClick(e, option)}>{option}</button>);
     }
   }
 
@@ -41,15 +41,12 @@ export default function CreateListing() {
       </div>
       <div>
         <label for="listing-name">Listing Name</label>
-        <br></br>
         <input id="listing-name" class="textbox" type="text"></input>
-        <br></br><br></br>
+        <br></br>
         <label for="listing-price">Price</label>
-        <br></br>
         <input id="listing-price" class="textbox" type="number" step=".01" min="0.00" placeholder="0.00"></input>
-        <br></br><br></br>
-        <label for="listing-desc">Description</label>
         <br></br>
+        <label for="listing-desc">Description</label>
         <textarea id="listing-desc" class="textbox" ></textarea>
       </div>
       <div>
@@ -61,7 +58,7 @@ export default function CreateListing() {
         <Selection options={conditions} selected={selectedCondition} setSelected={setSelectedCondition} />
       </div>
       <div class="grid-item-wide">
-        <input class="button-red" type="submit" value="Submit"></input>
+        <input id="submit" class="button red" type="submit" value="List Item"></input>
       </div>
       </form>
   );

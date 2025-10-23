@@ -1,5 +1,6 @@
 import { createListing } from "../api/listings";
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import "../styles/CreateListing.css"
 
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
@@ -30,6 +31,7 @@ function Selection({ options, selected, setSelected }) {
 }
 
 export default function CreateListing() {
+  let navigate = useNavigate();
   
   /**
  * onPublish(formValues, fileList)
@@ -63,9 +65,9 @@ export default function CreateListing() {
 
 
   function handleSubmit(e) {
+    e.preventDefault();
     if ((selectedCategory == "") || (selectedCondition == "")) {
       setError('Select a category and a condition.');
-      e.preventDefault();
       return;
     } else {
       setError('');
@@ -79,7 +81,8 @@ export default function CreateListing() {
       condition: selectedCondition
     }
 
-    onPublish(data, [file]);
+    console.log(onPublish(data, [file]));
+    // navigate("/account");
   }
 
   const listingForm = (

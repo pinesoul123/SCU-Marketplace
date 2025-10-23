@@ -5,8 +5,8 @@ import "../styles/CreateListing.css"
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
 const conditions = ["New", "Used - Very Good", "Used - Moderate"];
 
-function publishListing(formData, selectedCategory, selectedCondition) {
-  console.log("form" + formData.get("listing-name"));
+function Required({render}) {
+  return render ? <p>Required</p> : <></>
 }
 
 function Selection({ options, selected, setSelected }) {
@@ -25,7 +25,7 @@ function Selection({ options, selected, setSelected }) {
   }
 
   return (
-    <div class="selection-container">{chips}<input type="text" value="test"></input></div>
+    <div class="selection-container">{chips}</div>
   )
 }
 
@@ -35,23 +35,54 @@ export default function CreateListing() {
     console.log("New listing created:", id);
   }
 
+  const [error, setError] = useState('');
+
+  const [file, setFile] = useState("");
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState(0.00);
+  const [desc, setDesc] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("");
 
+
+  function handleSubmit(e) {
+    if ((selectedCategory == "") || (selectedCondition == "")) {
+      setError('Select a category and a condition.');
+      e.preventDefault();
+      return;
+    } else {
+      setError('');
+    }
+
+    const data = {
+      title: title,
+      price: price,
+      description: desc,
+      category: selectedCategory,
+      condition: selectedCondition
+    }
+
+    onPublish(data, [file]);
+  }
+
   const listingForm = (
-    <form id="listing-form" action={(e) => publishListing(e, selectedCategory, selectedCondition)}>
+    <form id="listing-form" onSubmit={handleSubmit}>
       <div>
-        <input type="file"></input>
+        <input type="file" onChange={(e) => {setFile(e.target.value)}} required></input>
       </div>
       <div>
-        <label for="listing-name">Listing Name</label>
-        <input id="listing-name" name="listing-name" class="textbox" type="text"></input>
+        <label for="listing-title">Listing Title</label>
+        <input id="listing-title" name="title" class="textbox" type="text" 
+               onChange={(e) => {setTitle(e.target.value)}} required></input>
         <br></br>
         <label for="listing-price">Price</label>
-        <input id="listing-price" class="textbox" type="number" step=".01" min="0.00" placeholder="0.00"></input>
+        <input id="listing-price" name="price" class="textbox" type="number" 
+               onChange={(e) => {setPrice(e.target.value)}} required 
+               step=".01" min="0.00" placeholder="0.00"></input>
         <br></br>
         <label for="listing-desc">Description</label>
-        <textarea id="listing-desc" class="textbox" ></textarea>
+        <textarea id="listing-desc" name="desc" class="textbox" 
+                  onChange={(e) => {setDesc(e.target.value)}} required></textarea>
       </div>
       <div>
         <label for="listing-category">Category</label>
@@ -62,6 +93,7 @@ export default function CreateListing() {
         <Selection options={conditions} selected={selectedCondition} setSelected={setSelectedCondition} />
       </div>
       <div class="grid-item-wide">
+        {error && <p id="error-msg">{error}</p>}
         <input id="submit" class="button red" type="submit" value="List Item"></input>
       </div>
       </form>

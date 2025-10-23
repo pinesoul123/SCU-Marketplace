@@ -41,8 +41,10 @@
 
 .grid-item-wide {
     grid-column: auto / span 2;
-    display:flex;
-    justify-content: center;;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .selection-container {
@@ -67,4 +69,8 @@
 #submit {
     padding: 15px 30px;
     font-weight: bold;
+}
+
+#error-msg {
+    color: red;
 }

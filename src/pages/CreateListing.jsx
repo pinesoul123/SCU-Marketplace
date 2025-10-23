@@ -6,8 +6,34 @@ import "../styles/CreateListing.css"
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
 const conditions = ["New", "Used - Very Good", "Used - Moderate"];
 
-function Required({render}) {
-  return render ? <p>Required</p> : <></>
+function Popup({message, buttonMessage, onClick}) {
+  return (
+    <div id="popup-container">
+        <div id="popup-bg"></div>
+        <div id="popup">
+          <p>{message}</p>
+          <button className="button red" onClick={onClick}>{buttonMessage}</button>
+        </div>
+      </div>
+  )
+}
+
+function SuccessPopup({render}) {
+  let navigate = useNavigate();
+  const redirect = () => navigate("/account");
+  if (render) {
+    return (
+      <Popup message={"Listing created!"} buttonMessage={"Close"} onClick={redirect} />
+    )
+  }
+}
+
+function ErrorPopup({render, setErrorPopup}) {
+  if (render) {
+    return (
+      <Popup message={"There was an error."} buttonMessage={"Close"} onClick={setErrorPopup(false)} />
+    )
+  }
 }
 
 function Selection({ options, selected, setSelected }) {
@@ -19,20 +45,18 @@ function Selection({ options, selected, setSelected }) {
   const chips = [];
   for (let option of options) {
     if (option == selected) {
-      chips.push(<button key={option} class="selected button selection-chip" onClick={(e) => e.preventDefault()}>{option}</button>);
+      chips.push(<button key={option} className="selected button selection-chip" onClick={(e) => e.preventDefault()}>{option}</button>);
     } else {
-      chips.push(<button key={option} class="button selection-chip" onClick={(e) => handleClick(e, option)}>{option}</button>);
+      chips.push(<button key={option} className="button selection-chip" onClick={(e) => handleClick(e, option)}>{option}</button>);
     }
   }
 
   return (
-    <div class="selection-container">{chips}</div>
+    <div className="selection-container">{chips}</div>
   )
 }
 
-export default function CreateListing() {
-  let navigate = useNavigate();
-  
+export default function CreateListing() {  
   /**
  * onPublish(formValues, fileList)
  * Backend bridge: accepts form data + images, sends to Firestore/Storage
@@ -45,12 +69,13 @@ export default function CreateListing() {
     try {
       const id = await createListing(formValues, Array.from(fileList || []));
       console.log("New listing created:", id);
-      //add a success pop up or smth
+      setSuccessPopup(true);
       return id;
     } catch (err) {
       console.error("Failed to create listing:", err);
+      setErrorPopup(true);
       throw err; 
-      // show error pop up
+      
     }
   }
 
@@ -62,6 +87,9 @@ export default function CreateListing() {
   const [desc, setDesc] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("");
+
+  const [successPopup, setSuccessPopup] = useState(false);
+  const [errorPopup, setErrorPopup] = useState(false);
 
 
   function handleSubmit(e) {
@@ -81,27 +109,32 @@ export default function CreateListing() {
       condition: selectedCondition
     }
 
-    console.log(onPublish(data, [file]));
-    // navigate("/account");
+    let publish;
+
+    if (file != "") {
+      publish = onPublish(data, [file]);
+    } else {
+      publish = onPublish(data);
+    }
   }
 
   const listingForm = (
     <form id="listing-form" onSubmit={handleSubmit}>
       <div>
-        <input type="file" onChange={(e) => {setFile(e.target.value)}} required></input>
+        <input type="file" onChange={(e) => {setFile(e.target.value)}}></input>
       </div>
       <div>
         <label for="listing-title">Listing Title</label>
-        <input id="listing-title" name="title" class="textbox" type="text" 
+        <input id="listing-title" name="title" className="textbox" type="text" 
                onChange={(e) => {setTitle(e.target.value)}} required></input>
         <br></br>
         <label for="listing-price">Price</label>
-        <input id="listing-price" name="price" class="textbox" type="number" 
+        <input id="listing-price" name="price" className="textbox" type="number" 
                onChange={(e) => {setPrice(e.target.value)}} required 
                step=".01" min="0.00" placeholder="0.00"></input>
         <br></br>
         <label for="listing-desc">Description</label>
-        <textarea id="listing-desc" name="desc" class="textbox" 
+        <textarea id="listing-desc" name="desc" className="textbox" 
                   onChange={(e) => {setDesc(e.target.value)}} required></textarea>
       </div>
       <div>
@@ -112,15 +145,17 @@ export default function CreateListing() {
         <label for="listing-condition">Condition</label>
         <Selection options={conditions} selected={selectedCondition} setSelected={setSelectedCondition} />
       </div>
-      <div class="grid-item-wide">
+      <div className="grid-item-wide">
         {error && <p id="error-msg">{error}</p>}
-        <input id="submit" class="button red" type="submit" value="List Item"></input>
+        <input id="submit" className="button red" type="submit" value="List Item"></input>
       </div>
       </form>
   );
 
   return (
     <div id="content">
+      <SuccessPopup render={successPopup} />
+      <ErrorPopup render={errorPopup} setErrorPopup={setErrorPopup} />
       <h1>Create Listing</h1>
       {listingForm}
     </div>

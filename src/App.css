@@ -4,11 +4,13 @@
   --grey: #c1c1c1;
   --black: #000000;
   --scu-red: #A32035;
+  
 }
 
 #root {
   margin: 0;
   /* text-align: center; */
+  overflow-x:hidden;
 }
 
 a {

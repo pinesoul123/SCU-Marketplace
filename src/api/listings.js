@@ -19,7 +19,7 @@ export async function createListing(data, files = []){
 
     //Write Firestore Doc
     const payload = {
-        sellerId: user.uid,
+        sellerID: user.uid,
         title: String(data.title || "").trim().slice(0, 120),
         price: Number(data.price || 0),
         category: data.category || null,

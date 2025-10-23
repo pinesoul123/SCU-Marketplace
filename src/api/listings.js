@@ -28,6 +28,7 @@ export async function createListing(data, files = []){
         locationTag: data.locationTag || null,
         photoURLs,
         status: "active",
+        savedCount: 0,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
     };

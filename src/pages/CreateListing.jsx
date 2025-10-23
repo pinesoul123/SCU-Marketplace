@@ -26,7 +26,34 @@ export default function CreateListing() {
   return (
     <div id="content">
       <h1>Create Listing</h1>
-      {/* build the form here, and call onPublish(values, files) on submit */}
+            {/* TEMP: Debug button to test backend without UI form */}
+      <div style={{ marginTop: 16, padding: 12, border: "1px dashed #ccc", borderRadius: 8 }}>
+        <button
+          onClick={async () => {
+            try {
+              const id = await onPublish(
+                {
+                  title: "Debug Item",
+                  price: 1,
+                  category: "debug",
+                  condition: "good",
+                  description: "temporary test",
+                  locationTag: "test",
+                },
+                [] // no files for this smoke test
+              );
+              alert("Created listing id: " + id);
+            } catch (e) {
+              alert("Create failed: " + (e?.message || String(e)));
+            }
+          }}
+        >
+          Run createListing() test
+        </button>
+        <small style={{ display: "block", marginTop: 8 }}>
+          Remove this block after testing.
+        </small>
+      </div>
     </div>
   );
 }

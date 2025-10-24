@@ -16,14 +16,15 @@ export default function Auth() {
 
   //Handles creating a new account and automatically signing in
   async function handleSignUp() {
-    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+    const userCred = await createUserWithEmailAndPassword(auth, email, password)
+    
     setUser(userCred.user);
     alert("Account created and signed in!");
   }
 
   //Handles logging in an existing user
   async function handleSignIn() {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
+    const userCred = await signInWithEmailAndPassword(auth, email, password).catch(console.log("err"));
     setUser(userCred.user);
     alert("Signed in!");
   }
@@ -35,7 +36,6 @@ export default function Auth() {
     alert("Signed out!");
   }
 
-  //below is all temporary, I just used this to get past the sign in portion when testing
   return (
     <div id="content-center">
       <div id="auth-container">

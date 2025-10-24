@@ -1,4 +1,4 @@
-import Listing from "../components/Listing.jsx"
+import Listing from "../components/ListingCard.jsx"
 
 export default function Market() {
   return (

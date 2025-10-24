@@ -1,7 +1,7 @@
 import { createListing } from "../api/listings";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Popup } from "../components/Popup";
+import Popup from "../components/Popup.jsx";
 import "../styles/CreateListing.css"
 
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];

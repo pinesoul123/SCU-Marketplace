@@ -6,6 +6,15 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import Popup from "../components/Popup.jsx";
+
+function SignInErrorPopup({render, setSignInError}) {
+  if (render) {
+    return (
+      <Popup message="There was an error signing in." buttonMessage="Close" onClick={setSignInError(false)}/>
+    )
+  }
+}
 
 //Handles user authentication (sign up, sign in, sign out)
 export default function Auth() {
@@ -13,6 +22,8 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const [signInError, setSignInError] = useState(false);
 
   //Handles creating a new account and automatically signing in
   async function handleSignUp() {
@@ -24,7 +35,7 @@ export default function Auth() {
 
   //Handles logging in an existing user
   async function handleSignIn() {
-    const userCred = await signInWithEmailAndPassword(auth, email, password).catch(console.log("err"));
+    const userCred = await signInWithEmailAndPassword(auth, email, password);
     setUser(userCred.user);
     alert("Signed in!");
   }
@@ -38,6 +49,7 @@ export default function Auth() {
 
   return (
     <div id="content-center">
+      <SignInErrorPopup render={signInError} setSignInError={setSignInError} />
       <div id="auth-container">
         <h2>SCU Marketplace</h2>
         <div>

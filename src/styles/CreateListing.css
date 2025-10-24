@@ -14,15 +14,8 @@
     display: block;
 }
 
-.textbox {
-    min-height: 30px;
+#listing-form .textbox {
     width: 70%;
-    margin: 10px 0;
-    padding: 0 10px;
-    border: var(--grey) 1px solid;
-    border-radius: 5px;
-    background-color: var(--white);
-    color: var(--black);
 }
 
 @media only screen and (max-width: 1050px) {
@@ -34,7 +27,7 @@
         margin-bottom: 20px;
     }
 
-    .textbox {
+    #listing-form .textbox {
         width: 90%;
     }
 }

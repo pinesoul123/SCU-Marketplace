@@ -2,6 +2,7 @@ import { createListing } from "../api/listings";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "../styles/CreateListing.css"
+import { useAuth } from "../lib/AuthProvider";
 
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
 const conditions = ["New", "Used - Very Good", "Used - Moderate"];
@@ -31,7 +32,7 @@ function SuccessPopup({render}) {
 function ErrorPopup({render, setErrorPopup}) {
   if (render) {
     return (
-      <Popup message={"There was an error."} buttonMessage={"Close"} onClick={setErrorPopup(false)} />
+      <Popup message={"There was an error."} buttonMessage={"Close"} onClick={() => setErrorPopup(false)} />
     )
   }
 }
@@ -57,6 +58,7 @@ function Selection({ options, selected, setSelected }) {
 }
 
 export default function CreateListing() {  
+  const { user, loading } = useAuth();
   /**
  * onPublish(formValues, fileList)
  * Backend bridge: accepts form data + images, sends to Firestore/Storage
@@ -65,7 +67,9 @@ export default function CreateListing() {
  * @returns {Promise<string>} - The new Firestore document ID for the listing.
  */
   
+  console.log("[auth check]", { uid: user?.uid });
   async function onPublish(formValues, fileList) {    
+    if (!user) throw new Error("You must be signed in to create a listing.");
     try {
       const id = await createListing(formValues, Array.from(fileList || []));
       console.log("New listing created:", id);
@@ -75,13 +79,12 @@ export default function CreateListing() {
       console.error("Failed to create listing:", err);
       setErrorPopup(true);
       throw err; 
-      
     }
   }
 
   const [error, setError] = useState('');
 
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState(0.00);
   const [desc, setDesc] = useState("");
@@ -92,7 +95,7 @@ export default function CreateListing() {
   const [errorPopup, setErrorPopup] = useState(false);
 
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if ((selectedCategory == "") || (selectedCondition == "")) {
       setError('Select a category and a condition.');
@@ -103,46 +106,51 @@ export default function CreateListing() {
 
     const data = {
       title: title,
-      price: price,
+      price: Number(price),
       description: desc,
       category: selectedCategory,
       condition: selectedCondition
     }
 
-    let publish;
+    console.log('[CreateListing] submit', { data, hasFile: !!file });
 
-    if (file != "") {
-      publish = onPublish(data, [file]);
-    } else {
-      publish = onPublish(data);
+    try {
+      if (file) {
+        await onPublish(data, [file]);
+      } else {
+        await onPublish(data);
+      }
+    } catch (err) {
+      // onPublish already sets the popup; keep a console for debugging
+      console.error('[CreateListing] submit error', err);
     }
   }
 
   const listingForm = (
     <form id="listing-form" onSubmit={handleSubmit}>
       <div>
-        <input type="file" onChange={(e) => {setFile(e.target.value)}}></input>
+        <input type="file" accept="image/*" onChange={(e) => { setFile((e.target.files && e.target.files[0]) || null); }}></input>
       </div>
       <div>
-        <label for="listing-title">Listing Title</label>
+        <label htmlFor="listing-title">Listing Title</label>
         <input id="listing-title" name="title" className="textbox" type="text" 
                onChange={(e) => {setTitle(e.target.value)}} required></input>
         <br></br>
-        <label for="listing-price">Price</label>
+        <label htmlFor="listing-price">Price</label>
         <input id="listing-price" name="price" className="textbox" type="number" 
                onChange={(e) => {setPrice(e.target.value)}} required 
                step=".01" min="0.00" placeholder="0.00"></input>
         <br></br>
-        <label for="listing-desc">Description</label>
+        <label htmlFor="listing-desc">Description</label>
         <textarea id="listing-desc" name="desc" className="textbox" 
                   onChange={(e) => {setDesc(e.target.value)}} required></textarea>
       </div>
       <div>
-        <label for="listing-category">Category</label>
+        <label htmlFor="listing-category">Category</label>
         <Selection options={categories} selected={selectedCategory} setSelected={setSelectedCategory} />
       </div>
       <div>
-        <label for="listing-condition">Condition</label>
+        <label htmlFor="listing-condition">Condition</label>
         <Selection options={conditions} selected={selectedCondition} setSelected={setSelectedCondition} />
       </div>
       <div className="grid-item-wide">
@@ -151,6 +159,24 @@ export default function CreateListing() {
       </div>
       </form>
   );
+    
+  if (loading) {
+    return (
+      <div id="content">
+        <h1>Create Listing</h1>
+        <p>Checking login...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div id="content">
+        <h1>Create Listing</h1>
+        <p>Please sign in to create a listing.</p>
+      </div>
+    );
+  }
 
   return (
     <div id="content">

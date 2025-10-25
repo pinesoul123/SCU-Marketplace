@@ -22,21 +22,35 @@ function GalleryButton({step, content, images, activeImage, setActiveImage}) {
 }
 
 function GalleryThumbnails({imageURLs, activeImage, setActiveImage}) {
-    
+    let images = [];
+    for (let i = 0; i < imageURLs.length; i++) {
+        if (i == activeImage) {
+            images.push(<img className="gallery-thumbnail" src={imageURLs[i]} />)
+        } else {
+            images.push(
+                <button onClick={() => setActiveImage(i)}>
+                    <img className="gallery-thumbnail inactive" src={imageURLs[i]} />
+                </button>
+            )
+        }
+    }
+
+    return (
+        <div id="gallery-thumbnail-container">
+            {images}
+        </div>
+    )
 }
 
 function ImageGallery({imageURLs}) {
     const [activeImage, setActiveImage] = useState(0);
     //const images = imageURLs.map((image) => <img className="listing-image" src={image} />)
-    function nextImage() {
-        setActiveImage(activeImage + 1);
-        console.log(activeImage);
-    }
 
     return (
         <div id="listing-gallery-container">
+            <GalleryThumbnails imageURLs={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
             <GalleryButton step={-1} content={"Back"} images={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
-            <img className="listing-image" src={imageURLs[activeImage]} />
+            <img className="gallery-image" src={imageURLs[activeImage]} />
             <GalleryButton step={1} content={"Next"} images={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
         </div>
     )

@@ -15,6 +15,27 @@
     width: 100%;
 }
 
-.listing-image {
+.gallery-image {
+    width: 200px;
+}
+
+.gallery-thumbnail {
     width: 100px;
+}
+
+#gallery-thumbnail-container button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: white;
+}
+
+#gallery-thumbnail-container .inactive {
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+#gallery-thumbnail-container .inactive:hover {
+    cursor: pointer;
+    opacity: 1;
 }

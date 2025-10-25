@@ -14,3 +14,7 @@
 #listing-container .button {
     width: 100%;
 }
+
+.listing-image {
+    width: 100px;
+}

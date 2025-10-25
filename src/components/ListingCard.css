@@ -1,16 +1,16 @@
-.listing {
+.listing-card {
   width: 300px;
   height: 300px;
   border: var(--grey) 1px solid;
   display: block;
 }
 
-.listing:hover {
+.listing-card:hover {
     cursor: pointer;
     /* background-color: blue; */
 }
 
-.listing-image {
+.listing-card-image {
     max-width: 300px;
     max-height: 300px;
 }

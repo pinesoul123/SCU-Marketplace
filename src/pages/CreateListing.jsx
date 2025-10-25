@@ -1,4 +1,5 @@
 import { createListing } from "../api/listings";
+import { analyzeImage } from "../api/imageAnalysis";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "../styles/CreateListing.css"
@@ -80,6 +81,8 @@ export default function CreateListing() {
   }
 
   const [error, setError] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState('');
 
   const [file, setFile] = useState("");
   const [title, setTitle] = useState("");
@@ -91,6 +94,47 @@ export default function CreateListing() {
   const [successPopup, setSuccessPopup] = useState(false);
   const [errorPopup, setErrorPopup] = useState(false);
 
+  // Handles image upload and AI analysis
+  async function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setFile(file);
+    setIsAnalyzing(true);
+    setAnalysisError('');
+
+    try {
+      console.log('Starting image analysis...');
+      const analysis = await analyzeImage(file);
+      
+      console.log('Analysis result:', analysis);
+      
+      // Updates fields
+      if (analysis.title) {
+        setTitle(analysis.title);
+      }
+      if (analysis.price) {
+        setPrice(analysis.price);
+      }
+      if (analysis.description) {
+        setDesc(analysis.description);
+      }
+      if (analysis.category && categories.includes(analysis.category)) {
+        setSelectedCategory(analysis.category);
+      }
+      if (analysis.condition && conditions.includes(analysis.condition)) {
+        setSelectedCondition(analysis.condition);
+      }
+
+      console.log(`Analysis completed using ${analysis.method}`);
+      
+    } catch (error) {
+      console.error('Image analysis failed:', error);
+      setAnalysisError(`Failed to analyze image: ${error.message}`);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -121,28 +165,54 @@ export default function CreateListing() {
   const listingForm = (
     <form id="listing-form" onSubmit={handleSubmit}>
       <div>
-        <input type="file" onChange={(e) => {setFile(e.target.value)}}></input>
+        <label htmlFor="listing-image">Product Image</label>
+        <input 
+          id="listing-image" 
+          type="file" 
+          accept="image/*" 
+          onChange={handleImageUpload} 
+          required
+        ></input>
+        {isAnalyzing && (
+          <div style={{color: '#007bff', fontSize: '14px', marginTop: '5px'}}>
+            Analyzing image. This may take a few seconds...
+          </div>
+        )}
+        {analysisError && (
+          <div style={{color: '#dc3545', fontSize: '14px', marginTop: '5px'}}>
+            {analysisError}
+          </div>
+        )}
       </div>
       <div>
-        <label for="listing-title">Listing Title</label>
-        <input id="listing-title" name="title" className="textbox" type="text" 
-               onChange={(e) => {setTitle(e.target.value)}} required></input>
+        <label htmlFor="listing-title">Listing Title</label>
+        <input 
+          id="listing-title" 
+          name="title" 
+          className="textbox" 
+          type="text" 
+          value={title}
+          onChange={(e) => {setTitle(e.target.value)}} 
+          required
+        ></input>
         <br></br>
-        <label for="listing-price">Price</label>
+        <label htmlFor="listing-price">Price</label>
         <input id="listing-price" name="price" className="textbox" type="number" 
+               value={price}
                onChange={(e) => {setPrice(e.target.value)}} required 
                step=".01" min="0.00" placeholder="0.00"></input>
         <br></br>
-        <label for="listing-desc">Description</label>
+        <label htmlFor="listing-desc">Description</label>
         <textarea id="listing-desc" name="desc" className="textbox" 
+                  value={desc}
                   onChange={(e) => {setDesc(e.target.value)}} required></textarea>
       </div>
       <div>
-        <label for="listing-category">Category</label>
+        <label htmlFor="listing-category">Category</label>
         <Selection options={categories} selected={selectedCategory} setSelected={setSelectedCategory} />
       </div>
       <div>
-        <label for="listing-condition">Condition</label>
+        <label htmlFor="listing-condition">Condition</label>
         <Selection options={conditions} selected={selectedCondition} setSelected={setSelectedCondition} />
       </div>
       <div className="grid-item-wide">

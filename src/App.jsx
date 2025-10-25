@@ -6,7 +6,6 @@ import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import RequestBoards from "./pages/RequestBoards";
 import Saved from "./pages/Saved";
-import ImageAnalysisTest from "./pages/ImageAnalysisTest";
 
 function App() {
   return (
@@ -38,7 +37,6 @@ function App() {
         <Route path="/account" element={<Account />} />
         <Route path="/requestboards" element={<RequestBoards />} />
         <Route path="/saved" element={<Saved />} />
-        <Route path="/test-image-analysis" element={<ImageAnalysisTest />} />
       </Routes>
     </BrowserRouter>
   );

@@ -6,25 +6,26 @@ function GalleryButton({step, content, images, activeImage, setActiveImage}) {
     function handleClick() {
         setActiveImage(activeImage + step);
     }
-    const button = <button onClick={handleClick}>{content}</button>
+    const button = <button className={"gallery-pg-button"} onClick={handleClick}>{content}</button>
     // Back button, only renders if active image is not first image
     if (step < 0) {
-        if (activeImage != 0) {
+        if (activeImage !== 0) {
             return (button);
         }
     }
     // Next button, only renders if active image is not last image
     if (step > 0) {
-        if (activeImage != images.length - 1) {
+        if (activeImage !== images.length - 1) {
             return (button);
         }
     }
+    return (<button className={"gallery-pg-button-inactive"}>{content}</button>);
 }
 
 function GalleryThumbnails({imageURLs, activeImage, setActiveImage}) {
-    let images = [];
+    const images = [];
     for (let i = 0; i < imageURLs.length; i++) {
-        if (i == activeImage) {
+        if (i === activeImage) {
             images.push(<img className="gallery-thumbnail" src={imageURLs[i]} />)
         } else {
             images.push(
@@ -44,14 +45,19 @@ function GalleryThumbnails({imageURLs, activeImage, setActiveImage}) {
 
 function ImageGallery({imageURLs}) {
     const [activeImage, setActiveImage] = useState(0);
-    //const images = imageURLs.map((image) => <img className="listing-image" src={image} />)
 
     return (
         <div id="listing-gallery-container">
             <GalleryThumbnails imageURLs={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
-            <GalleryButton step={-1} content={"Back"} images={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
-            <img className="gallery-image" src={imageURLs[activeImage]} />
-            <GalleryButton step={1} content={"Next"} images={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
+            <div className="gallery-pg-container">
+                <GalleryButton step={-1} content={"<"} images={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
+            </div>
+            <div id="gallery-image-container">
+                <img className="gallery-image" src={imageURLs[activeImage]} />
+            </div>
+            <div className="gallery-pg-container">
+                <GalleryButton step={1} content={">"} images={imageURLs} activeImage={activeImage} setActiveImage={setActiveImage} />
+            </div>
         </div>
     )
 }

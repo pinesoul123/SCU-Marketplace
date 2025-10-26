@@ -1,23 +1,12 @@
 import { createListing } from "../api/listings";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import Popup from "../components/Popup.jsx";
 import "../styles/CreateListing.css"
 import { useAuth } from "../lib/AuthProvider";
 
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
 const conditions = ["New", "Used - Very Good", "Used - Moderate"];
-
-function Popup({message, buttonMessage, onClick}) {
-  return (
-    <div id="popup-container">
-        <div id="popup-bg"></div>
-        <div id="popup">
-          <p>{message}</p>
-          <button className="button red" onClick={onClick}>{buttonMessage}</button>
-        </div>
-      </div>
-  )
-}
 
 function SuccessPopup({render}) {
   let navigate = useNavigate();

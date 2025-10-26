@@ -23,7 +23,6 @@ export default function Auth() {
   //Local state for user input and signed-in user data
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const [signInError, setSignInError] = useState(false);
 

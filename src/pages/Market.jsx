@@ -1,20 +1,103 @@
-import Listing from "../components/Listing.jsx"
+import { useState } from "react"
+import ListingCard from "../components/ListingCard.jsx"
 import "../styles/Market.css"
 
 const count = 10;
 
-export default function Market() {
-  const gallery = []
-  for (let i = 0; i < count; i++) {
-    gallery.push(<Listing listingId={i}></Listing>)
+function PaginationArrowButton({step, content, numOfPages, currentPage, setCurrentPage}) {
+  function handleClick() {
+        setCurrentPage(currentPage + step);
+    }
+    const button = <button className={"pagination-button"} onClick={handleClick}>{content}</button>
+    // Back button, only renders if active page is not the first page
+    if (step < 0) {
+        if (currentPage !== 0) {
+            return (button);
+        }
+    }
+    // Next button, only renders if active page is not the last page
+    if (step > 0) {
+        if (currentPage !== numOfPages - 1) {
+            return (button);
+        }
+    }
+    return (<button className={"pagination-button-inactive"}>{content}</button>);
+}
+
+function PaginationPageButton({pageIndex, currentPage, setCurrentPage}) {
+  function handleClick() {
+    setCurrentPage(pageIndex);
   }
+
+  let pgButton = <button className={"pagination-button"} onClick={handleClick}>{pageIndex + 1}</button>
+  if (currentPage === pageIndex) {
+    pgButton = <button className={"pagination-button-active"} onClick={handleClick}>{pageIndex + 1}</button>
+  }
+
+  return (pgButton)
+}
+
+function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
+  const numOfPages = Math.ceil(itemList.length/itemsPerPage);
+  // Finds the range of pages available in pagination menu
+  let lowerBound = currentPage - 2;
+  if (lowerBound < 0) {
+    lowerBound = 0;
+  }
+  let upperBound = currentPage + 2;
+  if (currentPage + 2 > numOfPages - 1) {
+    upperBound = numOfPages - 1;
+  }
+  console.log(numOfPages);
+  console.log(lowerBound + "..." + upperBound);
+
+  const pagination = [];
+  for (let i = lowerBound; i <= upperBound; i++) {
+    pagination.push(<PaginationPageButton pageIndex={i} currentPage={currentPage} setCurrentPage={setCurrentPage} />)
+  }
+  
+  return (
+    <div className="pagination-container">
+      <PaginationArrowButton step={-1} content={"<"} numOfPages={numOfPages} 
+                             currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      {pagination}
+      <PaginationArrowButton step={1} content={">"} numOfPages={numOfPages} 
+                             currentPage={currentPage} setCurrentPage={setCurrentPage} />
+    </div>
+  )
+}
+
+function ListingsPage({listings, currentPage, itemsPerPage}) {
+  const gallery = [];
+  const startingIndex = currentPage * itemsPerPage;
+  let endingIndex = (currentPage + 1) * itemsPerPage; //exclusive
+  if (endingIndex > listings.length) {
+    endingIndex = listings.length;
+  }
+
+  for (let i = startingIndex; i < endingIndex; i++) {
+    gallery.push(<ListingCard listingId={listings[i]}></ListingCard>);
+  }
+  return (
+    <div id="listings-container">
+      {gallery}
+    </div>
+  )
+}
+
+export default function Market() {
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 2;
+
+  const tempListings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 
   return (
     <div id="content">
       <h1>Market</h1>
-      <div id="market-container">
-        {gallery}
-      </div>
+      <ListingsPage listings={tempListings} currentPage={currentPage} itemsPerPage={itemsPerPage} />
+      <Pagination id="market-pagination" itemList={tempListings} itemsPerPage={itemsPerPage} 
+                  currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
   );
 }

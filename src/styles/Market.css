@@ -1,0 +1,18 @@
+#market-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 10px;
+
+}
+
+@media only screen and (max-width: 1100px) {
+    #market-container {
+        grid-template-columns: auto auto auto;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    #market-container {
+        grid-template-columns: auto auto;
+    }
+}

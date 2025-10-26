@@ -1,16 +1,45 @@
 .listing {
-  width: 300px;
-  height: 300px;
-  border: var(--grey) 1px solid;
+  padding: 0;
   display: block;
+  text-align: left;
 }
 
 .listing:hover {
     cursor: pointer;
-    /* background-color: blue; */
+}
+
+.listing-image-container {
+    height: 22vw;
 }
 
 .listing-image {
-    max-width: 300px;
-    max-height: 300px;
+  min-width: 100%;
+  min-height: 100%;
+  max-width: 100%;
+  max-height: 22vw;
+  object-fit: cover;
+}
+
+@media only screen and (max-width: 1100px) {
+    .listing-image-container {
+      height: 28vw;
+    }
+
+    .listing-image {
+      max-height: 28vw;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .listing-image-container {
+      height: 40vw;
+    }
+
+    .listing-image {
+      max-height: 40vw;
+    }
+}
+
+.listing-info {
+  padding: 10px;
 }

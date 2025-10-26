@@ -5,6 +5,10 @@
   --black: #000000;
   --scu-red: #A32035;
   
+  /* buttons with active and inactive states */
+  --button: #e6e6e6;
+  --button-hover: #c1c1c1;
+  --button-inactive: #f6f6f6;
 }
 
 #root {

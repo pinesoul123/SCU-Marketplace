@@ -98,6 +98,9 @@ a {
   color: var(--black);
 }
 
+#searchbar-submit {
+  display: none;
+}
 
 .navbar-right {
   margin: 10px 0;

@@ -1,4 +1,4 @@
-import { createListing } from "../api/listings";
+import { createListing, unpublishListing, removeListing } from "../api/listings";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup.jsx";
@@ -82,6 +82,14 @@ export default function CreateListing() {
 
   const [successPopup, setSuccessPopup] = useState(false);
   const [errorPopup, setErrorPopup] = useState(false);
+  // local state for remove/unpublish (keeps UI unchanged)
+  const [unpubLoading, setUnpubLoading] = useState(false);
+  const [unpubError, setUnpubError] = useState(null);
+  const [delLoading, setDelLoading]   = useState(false);
+  const [delError, setDelError]       = useState(null);
+
+  // minimal test UI state (listing id to target for remove/unpublish)
+  const [testListingId, setTestListingId] = useState("");
 
 
   async function handleSubmit(e) {
@@ -115,6 +123,32 @@ export default function CreateListing() {
     }
   }
 
+// Call this to soft-remove — seller or admin
+async function onUnpublish(listingId) {
+  if (!user) { console.warn("Not signed in"); setErrorPopup(true); return; }
+  try {
+    await unpublishListing(listingId);
+    console.log("[unpublish] OK", listingId);
+    //trigger a refetch here if this page ever lists items
+  } catch (e) {
+    console.error("[unpublish] failed", e);
+    setErrorPopup(true);
+  }
+}
+
+// Call this to hard-delete — seller or admin
+async function onDelete(listingId, { deletePhotos = true } = {}) {
+  if (!user) { console.warn("Not signed in"); setErrorPopup(true); return; }
+  try {
+    await removeListing(listingId, { deletePhotos });
+    console.log("[delete] OK", listingId);
+    //trigger a refetch here if this page ever lists items
+  } catch (e) {
+    console.error("[delete] failed", e);
+    setErrorPopup(true);
+  }
+}
+  
   const listingForm = (
     <form id="listing-form" onSubmit={handleSubmit}>
       <div>
@@ -173,6 +207,46 @@ export default function CreateListing() {
       <ErrorPopup render={errorPopup} setErrorPopup={setErrorPopup} />
       <h1>Create Listing</h1>
       {listingForm}
+
+      {/* --- Minimal test UI for remove/unpublish (seller/admin) --- */}
+      <div style={{ marginTop: 24, paddingTop: 12, borderTop: "1px dashed #ccc" }}>
+        <h3 style={{ margin: 0, fontSize: 16 }}>Remove/Unpublish (Test)</h3>
+        <p style={{ marginTop: 6, fontSize: 12 }}>
+          Enter a listing ID you own (or use an admin account), then try unpublish or delete.
+        </p>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <label htmlFor="test-listing-id" style={{ fontSize: 12 }}>Listing ID</label>
+          <input
+            id="test-listing-id"
+            type="text"
+            value={testListingId}
+            onChange={(e) => setTestListingId(e.target.value)}
+            placeholder="e.g. abc123..."
+            style={{ padding: "6px 8px", minWidth: 260 }}
+          />
+          <button
+            type="button"
+            onClick={() => onUnpublish(testListingId)}
+            disabled={!testListingId || unpubLoading}
+            className="button"
+          >
+            {unpubLoading ? "Unpublishing..." : "Unpublish"}
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(testListingId, { deletePhotos: true })}
+            disabled={!testListingId || delLoading}
+            className="button red"
+          >
+            {delLoading ? "Deleting..." : "Delete"}
+          </button>
+        </div>
+        {(unpubError || delError) && (
+          <p style={{ color: "#b00020", marginTop: 8, fontSize: 12 }}>
+            Action failed. Check console for details.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

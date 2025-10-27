@@ -3,28 +3,17 @@ import { Link, useSearchParams, useLocation, Navigate, redirect, useNavigate } f
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  function handleSubmit(event) {
-    redirect("/market");
-    event.preventDefault();
-    // The serialize function here would be responsible for
-    // creating an object of { key: value } pairs from the
-    // fields in the form that make up the query.
-    // let params = serializeFormQuery(event.target);
-    console.log("search");
-    setSearchParams({ search: event.target[0].value });
 
-  }
-
-  const routeChange = () =>{ 
-    let path = `/market`; 
+  const handleSubmit = (e) =>{ 
+    e.preventDefault();
+    setSearchParams({ search: e.target[0].value });
+    let path = `/market?search=` + e.target[0].value; 
     navigate(path);
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* <Navigate to="/market" replace={false} state={0} /> */}
       <input id="searchbar" type="text" placeholder="Search items"></input>
-      <button onClick={routeChange}>Wah</button>
       <input id="searchbar-submit" type="submit"></input>
     </form>
   )

@@ -76,16 +76,19 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
   )
 }
 
-function ListingsPage({listings, currentPage, itemsPerPage}) {
+function ListingsPage({listings, searchQuery, currentPage, itemsPerPage}) {
+  // Change once hooked up to backend
+  const renderedListings = listings.filter(listing => listing.includes(searchQuery));
+
   const gallery = [];
   const startingIndex = currentPage * itemsPerPage;
   let endingIndex = (currentPage + 1) * itemsPerPage; //exclusive
-  if (endingIndex > listings.length) {
-    endingIndex = listings.length;
+  if (endingIndex > renderedListings.length) {
+    endingIndex = renderedListings.length;
   }
 
   for (let i = startingIndex; i < endingIndex; i++) {
-    gallery.push(<ListingCard listingId={listings[i]}></ListingCard>);
+    gallery.push(<ListingCard listingId={renderedListings[i]}></ListingCard>);
   }
   return (
     <div id="listings-container">
@@ -98,15 +101,15 @@ export default function Market() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 12;
 
-  const tempListings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26];
+  const tempListings = ["abc", "bcd", "cde", "def", "efg", "fgh"];
+  // Remember to change filters functionality once hooked up to backend
 
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(searchParams.get("search"));
 
   return (
     <div id="content">
       <h1>Market</h1>
-      <ListingsPage listings={tempListings} currentPage={currentPage} itemsPerPage={itemsPerPage} />
+      <ListingsPage listings={tempListings} searchQuery={searchParams.get("search")} currentPage={currentPage} itemsPerPage={itemsPerPage} />
       <Pagination itemList={tempListings} itemsPerPage={itemsPerPage} 
                   currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>

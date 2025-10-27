@@ -6,10 +6,12 @@ import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import RequestBoards from "./pages/RequestBoards";
 import Saved from "./pages/Saved";
+import Navbar from "./components/Navbar.jsx"
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Market />} />
         <Route path="/market" element={<Market />} />

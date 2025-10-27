@@ -1,4 +1,4 @@
-import Listing from "../components/Listing.jsx"
+import Listing from "./Listing.jsx"
 import "../styles/Market.css"
 
 const count = 10;
@@ -6,7 +6,7 @@ const count = 10;
 export default function Market() {
   const gallery = []
   for (let i = 0; i < count; i++) {
-    gallery.push(<Listing listingId={i}></Listing>)
+    // gallery.push(<Listing listingId={i}></Listing>)
   }
 
   return (

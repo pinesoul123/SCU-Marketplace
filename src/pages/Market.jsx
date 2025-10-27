@@ -77,8 +77,12 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
 }
 
 function ListingsPage({listings, searchQuery, currentPage, itemsPerPage}) {
-  // Change once hooked up to backend
-  const renderedListings = listings.filter(listing => listing.includes(searchQuery));
+  // Change once hooked up to backend ------------------
+  let renderedListings = listings;
+  if ((searchQuery !== "") && (searchQuery !== null)) {
+    renderedListings = listings.filter(listing => listing.includes(searchQuery))
+  }
+  // ---------------------------------------------------
 
   const gallery = [];
   const startingIndex = currentPage * itemsPerPage;
@@ -88,7 +92,7 @@ function ListingsPage({listings, searchQuery, currentPage, itemsPerPage}) {
   }
 
   for (let i = startingIndex; i < endingIndex; i++) {
-    gallery.push(<ListingCard listingId={renderedListings[i]}></ListingCard>);
+    gallery.push(<ListingCard key={renderedListings[i]} listingId={renderedListings[i]}></ListingCard>);
   }
   return (
     <div id="listings-container">

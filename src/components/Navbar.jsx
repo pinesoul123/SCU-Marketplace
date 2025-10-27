@@ -9,7 +9,7 @@ function Search() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form id="searchbar-form" onSubmit={handleSubmit}>
       <input id="searchbar" type="text" placeholder="Search items"></input>
     </form>
   )

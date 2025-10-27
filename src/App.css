@@ -46,12 +46,14 @@ a {
 
 #navbar {
   width: 100%;
+  min-width: 470px;
   /* height: 90px; */
   border-bottom: var(--grey) solid 1px;
   display: flex;
   align-items: center;  
   justify-content: space-between;
   background-color: var(--white);
+  text-align: center;
 }
 
 #navbar > * > * {
@@ -86,20 +88,21 @@ a {
   margin: 0;
 }
 
+#searchbar-form {
+  width: 100%;
+  padding: 0 10px;
+  margin: 0 20px;
+
+}
+
 #searchbar {
   width: 100%;
-  max-width: 100%;
   height: 30px;
-  margin-left: 20px;
   padding: 0 10px;
   border: var(--grey) 1px solid;
   border-radius: 5px;
   background-color: var(--white);
   color: var(--black);
-}
-
-#searchbar-submit {
-  display: none;
 }
 
 .navbar-right {
@@ -132,13 +135,14 @@ a {
     width: 100vw;
   }
 
-  #searchbar {
-    margin-right: 30px;
+  #searchbar-form {
+    margin: 0 40px 0 20px;
   }
 
   .navbar-right {
     margin-right: 0;
     width: 100vw;
+    min-width: 470px;
     justify-content:center;
   }
 }

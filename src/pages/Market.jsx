@@ -1,5 +1,7 @@
 import { useState } from "react"
 import ListingCard from "../components/ListingCard.jsx"
+import { useSearchParams } from "react-router-dom";
+
 import "../styles/Market.css"
 
 const count = 10;
@@ -97,6 +99,9 @@ export default function Market() {
   const itemsPerPage = 12;
 
   const tempListings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26];
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log(searchParams.get("search"));
 
   return (
     <div id="content">

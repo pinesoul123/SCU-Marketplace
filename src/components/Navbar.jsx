@@ -1,20 +1,16 @@
 import { Link, useSearchParams, useLocation, Navigate, redirect, useNavigate } from "react-router-dom";
 
 function Search() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const handleSubmit = (e) =>{ 
     e.preventDefault();
-    setSearchParams({ search: e.target[0].value });
-    let path = `/market?search=` + e.target[0].value; 
+    let path = `/market?search=` + e.target[0].value;
     navigate(path);
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <input id="searchbar" type="text" placeholder="Search items"></input>
-      <input id="searchbar-submit" type="submit"></input>
     </form>
   )
 }

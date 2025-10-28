@@ -8,7 +8,11 @@ export class Listings {
     const { doc, getDoc } = await import("firebase/firestore");
     const uid = auth.currentUser?.uid;
     if (!uid) return false;
-    const snap = await getDoc(doc(db, "roles", uid));
+    const ref = doc(db, "roles", uid);
+    console.log(4.5);
+    const snap = await getDoc(ref);
+    console.log(4.7);
+    if (!snap.exists()) throw new Error("Role not found");
     return !!(snap.exists() && snap.data()?.admin === true);
   }
 
@@ -116,6 +120,19 @@ export class Listings {
     if (!isOwner && !isAdmin) throw new Error("Only the seller or an admin can unpublish this listing.");
 
     await updateDoc(ref, { status: "removed", updatedAt: serverTimestamp() });
+  }
+
+  async get(listingId) {
+    const { auth, db } = await import("../lib/firebase.js");
+    const { doc, getDoc, updateDoc, serverTimestamp } = await import("firebase/firestore");
+
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("Please sign in.");
+
+    const ref = doc(db, "listings", listingId);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) throw new Error("Listing not found");
+    return {id: listingId, listing: snap.data()};
   }
 }
 

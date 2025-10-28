@@ -9,9 +9,7 @@ export class Listings {
     const uid = auth.currentUser?.uid;
     if (!uid) return false;
     const ref = doc(db, "roles", uid);
-    console.log(4.5);
     const snap = await getDoc(ref);
-    console.log(4.7);
     if (!snap.exists()) throw new Error("Role not found");
     return !!(snap.exists() && snap.data()?.admin === true);
   }

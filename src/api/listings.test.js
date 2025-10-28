@@ -1,8 +1,6 @@
 import { expect, test, vi } from 'vitest'
 import { listings } from './listings.js'
 import { auth } from "../lib/firebase";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-
 
 // Mocks Firebase auth 
 vi.mock('../lib/firebase.js', () => ({

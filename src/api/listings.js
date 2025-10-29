@@ -133,17 +133,20 @@ export class Listings {
     return {id: listingId, listing: snap.data()};
   }
 
-  async getAllIds() {
+  async getAllIds(searchQuery = "") {
     const { auth, db } = await import("../lib/firebase.js");
-    const { collection, getDocs } = await import("firebase/firestore");
+    const { collection, getDocs, query, where } = await import("firebase/firestore");
 
     const uid = auth.currentUser?.uid;
     if (!uid) throw new Error("Please sign in.");
 
-    const snap = await getDocs(collection(db, "listings"));
+    const q = query(collection(db, "listings"), where("status", "==", "active"));
+    const snap = await getDocs(q);
     if (snap.empty) throw new Error("Collection Empty");
+
+    let results = snap.docs;
     
-    return snap.docs;
+    return results;
   }
 }
 

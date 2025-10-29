@@ -5,10 +5,8 @@ import { listings } from "../api/listings";
 
 import "../styles/Market.css"
 
-const count = 10;
-
-async function getAllListings() {
-  return (await listings.getAllIds());
+async function getAllListings(searchQuery) {
+  return (await listings.getAllIds(searchQuery));
 }
 
 function PaginationArrowButton({step, content, numOfPages, currentPage, setCurrentPage}) {
@@ -81,39 +79,48 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
   )
 }
 
-function ListingsPage({searchQuery, currentPage, itemsPerPage}) {
-  
-  // Change once hooked up to backend ------------------
-  // if ((searchQuery !== "") && (searchQuery !== null)) {
-  //   renderedListings = listings.filter(listing => listing.data().title.includes(searchQuery))
-  // }
-  // ---------------------------------------------------
-  const [listings, setListings] = useState([]);
-  const getListings = getAllListings();
+function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) {
+  const [listingDocs, setListingDocs] = useState([]);
+  const getListingDocs = getAllListings(searchQuery);
   
   useEffect(() => {
-    getListings
-    .then(listings => {
-      setListings(listings); 
+    getListingDocs
+    .then(listingDocs => {
+      setListingDocs(listingDocs); 
     });
   }, [])
 
+  let renderedListings = listingDocs;
+
+  // SEARCH ---------------------
+  if ((searchQuery !== "") && (searchQuery !== null)) {
+    renderedListings = listingDocs.filter(listing => listing.data().title.toLowerCase().includes(searchQuery.toLowerCase()))
+  }
+
+  // GETTING PAGE LIMIT ---------
   const gallery = [];
   const startingIndex = currentPage * itemsPerPage;
   let endingIndex = (currentPage + 1) * itemsPerPage; //exclusive
-  if (endingIndex > listings.length) {
-    endingIndex = listings.length;
+  if (endingIndex > renderedListings.length) {
+    endingIndex = renderedListings.length;
   }
 
+  // PUSHING ITEMS --------------
   for (let i = startingIndex; i < endingIndex; i++) {
-    gallery.push(<ListingCard key={listings[i].id} listingId={listings[i].id}></ListingCard>);
+    if (renderedListings[i] != null) {
+      gallery.push(<ListingCard key={renderedListings[i].id} listingData={renderedListings[i].data()}></ListingCard>);
+    }
   }
 
 
   return (
-    <div id="listings-container">
-      {gallery}
-    </div>
+    <>
+      <div id="listings-container">
+        {gallery}
+      </div>
+      <Pagination itemList={renderedListings} itemsPerPage={itemsPerPage} 
+                    currentPage={currentPage} setCurrentPage={setCurrentPage} />
+    </>
   )
 }
 
@@ -121,18 +128,13 @@ export default function Market() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 12;
 
-  // const tempListings = ["abc", "bcd", "cde", "def", "efg", "fgh"];
-  // Remember to change filters functionality once hooked up to backend
-
   const [searchParams, setSearchParams] = useSearchParams();
   
 
   return (
     <div id="content">
       <h1>Market</h1>
-      <ListingsPage searchQuery={searchParams.get("search")} currentPage={currentPage} itemsPerPage={itemsPerPage} />
-      <Pagination itemList={listings} itemsPerPage={itemsPerPage} 
-                  currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <ListingsPage searchQuery={searchParams.get("search")} itemsPerPage={itemsPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
   );
 }

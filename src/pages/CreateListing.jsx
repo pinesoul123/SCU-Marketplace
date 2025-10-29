@@ -1,4 +1,4 @@
-import { createListing } from "../api/listings";
+// import { createListing } from "../api/listings";
 import { analyzeImage } from "../api/imageAnalysis";
 import { createListing, unpublishListing, removeListing } from "../api/listings";
 import { useState } from 'react';

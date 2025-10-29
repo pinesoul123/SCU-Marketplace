@@ -1,10 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ListingCard from "../components/ListingCard.jsx"
 import { useSearchParams } from "react-router-dom";
+import { listings } from "../api/listings";
 
 import "../styles/Market.css"
 
 const count = 10;
+
+async function getAllListings() {
+  return (await listings.getAllIds());
+}
 
 function PaginationArrowButton({step, content, numOfPages, currentPage, setCurrentPage}) {
   function handleClick() {
@@ -76,24 +81,35 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
   )
 }
 
-function ListingsPage({listings, searchQuery, currentPage, itemsPerPage}) {
+function ListingsPage({searchQuery, currentPage, itemsPerPage}) {
+  
   // Change once hooked up to backend ------------------
-  let renderedListings = listings;
-  if ((searchQuery !== "") && (searchQuery !== null)) {
-    renderedListings = listings.filter(listing => listing.includes(searchQuery))
-  }
+  // if ((searchQuery !== "") && (searchQuery !== null)) {
+  //   renderedListings = listings.filter(listing => listing.data().title.includes(searchQuery))
+  // }
   // ---------------------------------------------------
+  const [listings, setListings] = useState([]);
+  const getListings = getAllListings();
+  
+  useEffect(() => {
+    getListings
+    .then(listings => {
+      setListings(listings); 
+    });
+  }, [])
 
   const gallery = [];
   const startingIndex = currentPage * itemsPerPage;
   let endingIndex = (currentPage + 1) * itemsPerPage; //exclusive
-  if (endingIndex > renderedListings.length) {
-    endingIndex = renderedListings.length;
+  if (endingIndex > listings.length) {
+    endingIndex = listings.length;
   }
 
   for (let i = startingIndex; i < endingIndex; i++) {
-    gallery.push(<ListingCard key={renderedListings[i]} listingId={renderedListings[i]}></ListingCard>);
+    gallery.push(<ListingCard key={listings[i].id} listingId={listings[i].id}></ListingCard>);
   }
+
+
   return (
     <div id="listings-container">
       {gallery}
@@ -105,16 +121,17 @@ export default function Market() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 12;
 
-  const tempListings = ["abc", "bcd", "cde", "def", "efg", "fgh"];
+  // const tempListings = ["abc", "bcd", "cde", "def", "efg", "fgh"];
   // Remember to change filters functionality once hooked up to backend
 
   const [searchParams, setSearchParams] = useSearchParams();
+  
 
   return (
     <div id="content">
       <h1>Market</h1>
-      <ListingsPage listings={tempListings} searchQuery={searchParams.get("search")} currentPage={currentPage} itemsPerPage={itemsPerPage} />
-      <Pagination itemList={tempListings} itemsPerPage={itemsPerPage} 
+      <ListingsPage searchQuery={searchParams.get("search")} currentPage={currentPage} itemsPerPage={itemsPerPage} />
+      <Pagination itemList={listings} itemsPerPage={itemsPerPage} 
                   currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
   );

@@ -122,7 +122,7 @@ export class Listings {
 
   async get(listingId) {
     const { auth, db } = await import("../lib/firebase.js");
-    const { doc, getDoc, updateDoc, serverTimestamp } = await import("firebase/firestore");
+    const { doc, getDoc } = await import("firebase/firestore");
 
     const uid = auth.currentUser?.uid;
     if (!uid) throw new Error("Please sign in.");
@@ -131,6 +131,19 @@ export class Listings {
     const snap = await getDoc(ref);
     if (!snap.exists()) throw new Error("Listing not found");
     return {id: listingId, listing: snap.data()};
+  }
+
+  async getAllIds() {
+    const { auth, db } = await import("../lib/firebase.js");
+    const { collection, getDocs } = await import("firebase/firestore");
+
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("Please sign in.");
+
+    const snap = await getDocs(collection(db, "listings"));
+    if (snap.empty) throw new Error("Collection Empty");
+    
+    return snap.docs;
   }
 }
 

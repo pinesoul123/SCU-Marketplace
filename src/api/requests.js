@@ -1,5 +1,3 @@
-
-
 /**
  * src/api/requests.js
  *

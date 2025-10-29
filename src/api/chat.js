@@ -1,4 +1,3 @@
-// src/api/chat.js
 import { db, auth } from "../lib/firebase.js";
 import {
   doc, setDoc, getDoc, addDoc, collection, serverTimestamp,

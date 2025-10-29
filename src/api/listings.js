@@ -10,8 +10,9 @@ export class Listings {
     if (!uid) return false;
     const ref = doc(db, "roles", uid);
     const snap = await getDoc(ref);
-    if (!snap.exists()) throw new Error("Role not found");
-    return !!(snap.exists() && snap.data()?.admin === true);
+    // If no role doc, treat as non-admin rather than throwing
+    if (!snap.exists()) return false;
+    return !!(snap.data()?.admin === true);
   }
 
   // Create a new listing (uploads up to 5 photos)
@@ -87,7 +88,10 @@ export class Listings {
     const data = snap.data();
 
     const isOwner = data.sellerID === uid;
-    const isAdmin = await this._isCurrentUserAdmin();
+    let isAdmin = false;
+    if (!isOwner) {
+      isAdmin = await this._isCurrentUserAdmin();
+    }
     if (!isOwner && !isAdmin) throw new Error("Only the seller or an admin can delete this listing.");
 
     if (opts.deletePhotos && Array.isArray(data.photoPaths) && data.photoPaths.length) {
@@ -114,7 +118,10 @@ export class Listings {
     const data = snap.data();
 
     const isOwner = data.sellerID === uid;
-    const isAdmin = await this._isCurrentUserAdmin();
+    let isAdmin = false;
+    if (!isOwner) {
+      isAdmin = await this._isCurrentUserAdmin();
+    }
     if (!isOwner && !isAdmin) throw new Error("Only the seller or an admin can unpublish this listing.");
 
     await updateDoc(ref, { status: "removed", updatedAt: serverTimestamp() });

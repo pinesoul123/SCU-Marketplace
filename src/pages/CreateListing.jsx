@@ -1,11 +1,13 @@
 // import { createListing } from "../api/listings";
 import { analyzeImage } from "../api/imageAnalysis";
 import { createListing, unpublishListing, removeListing } from "../api/listings";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup.jsx";
 import "../styles/CreateListing.css"
 import { useAuth } from "../lib/AuthProvider";
+import { db } from "../lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
 const conditions = ["New", "Used - Very Good", "Used - Moderate"];
@@ -86,6 +88,9 @@ export default function CreateListing() {
 
   const [successPopup, setSuccessPopup] = useState(false);
   const [errorPopup, setErrorPopup] = useState(false);
+  // role info for UI gating
+  const [role, setRole] = useState({});
+  const canModerate = !!(role?.admin || role?.canModerateListings);
   // local state for remove/unpublish (keeps UI unchanged)
   const [unpubLoading, setUnpubLoading] = useState(false);
   const [unpubError, setUnpubError] = useState(null);
@@ -95,47 +100,24 @@ export default function CreateListing() {
   // minimal test UI state (listing id to target for remove/unpublish)
   const [testListingId, setTestListingId] = useState("");
 
-  // Handles image upload and AI analysis
-  async function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    setFile(file);
-    setIsAnalyzing(true);
-    setAnalysisError('');
-
-    try {
-      console.log('Starting image analysis...');
-      const analysis = await analyzeImage(file);
-      
-      console.log('Analysis result:', analysis);
-      
-      // Updates fields
-      if (analysis.title) {
-        setTitle(analysis.title);
+  useEffect(() => {
+    let cancelled = false;
+    async function loadRole() {
+      try {
+        if (!user?.uid) {
+          if (!cancelled) setRole({});
+          return;
+        }
+        const snap = await getDoc(doc(db, "roles", user.uid));
+        if (!cancelled) setRole(snap.exists() ? snap.data() : {});
+      } catch (e) {
+        console.warn("[roles] read failed", e);
+        if (!cancelled) setRole({});
       }
-      if (analysis.price) {
-        setPrice(analysis.price);
-      }
-      if (analysis.description) {
-        setDesc(analysis.description);
-      }
-      if (analysis.category && categories.includes(analysis.category)) {
-        setSelectedCategory(analysis.category);
-      }
-      if (analysis.condition && conditions.includes(analysis.condition)) {
-        setSelectedCondition(analysis.condition);
-      }
-
-      console.log(`Analysis completed using ${analysis.method}`);
-      
-    } catch (error) {
-      console.error('Image analysis failed:', error);
-      setAnalysisError(`Failed to analyze image: ${error.message}`);
-    } finally {
-      setIsAnalyzing(false);
     }
-  }
+    loadRole();
+    return () => { cancelled = true; };
+  }, [user?.uid]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -190,6 +172,7 @@ async function onDelete(listingId, { deletePhotos = true } = {}) {
     //trigger a refetch here if this page ever lists items
   } catch (e) {
     console.error("[delete] failed", e);
+    alert(e?.message || String(e));
     setErrorPopup(true);
   }
 }
@@ -277,9 +260,15 @@ async function onDelete(listingId, { deletePhotos = true } = {}) {
       <SuccessPopup render={successPopup} />
       <ErrorPopup render={errorPopup} setErrorPopup={setErrorPopup} />
       <h1>Create Listing</h1>
+      {canModerate && (
+        <div style={{ margin: "4px 0 8px", fontSize: 12, color: "#155724", background: "#d4edda", border: "1px solid #c3e6cb", padding: "4px 8px", display: "inline-block", borderRadius: 4 }}>
+          Moderator tools enabled
+        </div>
+      )}
       {listingForm}
 
       {/* --- Minimal test UI for remove/unpublish (seller/admin) --- */}
+      {canModerate && (
       <div style={{ marginTop: 24, paddingTop: 12, borderTop: "1px dashed #ccc" }}>
         <h3 style={{ margin: 0, fontSize: 16 }}>Remove/Unpublish (Test)</h3>
         <p style={{ marginTop: 6, fontSize: 12 }}>
@@ -318,6 +307,7 @@ async function onDelete(listingId, { deletePhotos = true } = {}) {
           </p>
         )}
       </div>
+      )}
     </div>
   );
 }

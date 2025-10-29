@@ -1,18 +1,18 @@
-.listing {
+.listing-card {
   padding: 0;
   display: block;
   text-align: left;
 }
 
-.listing:hover {
+.listing-card:hover {
     cursor: pointer;
 }
 
-.listing-image-container {
+.listing-card-image-container {
     height: 22vw;
 }
 
-.listing-image {
+.listing-card-image {
   min-width: 100%;
   min-height: 100%;
   max-width: 100%;
@@ -21,25 +21,25 @@
 }
 
 @media only screen and (max-width: 1100px) {
-    .listing-image-container {
+    .listing-card-image-container {
       height: 28vw;
     }
 
-    .listing-image {
+    .listing-card-image {
       max-height: 28vw;
     }
 }
 
 @media only screen and (max-width: 800px) {
-    .listing-image-container {
+    .listing-card-image-container {
       height: 40vw;
     }
 
-    .listing-image {
+    .listing-card-image {
       max-height: 40vw;
     }
 }
 
-.listing-info {
+.listing-card-info {
   padding: 10px;
 }

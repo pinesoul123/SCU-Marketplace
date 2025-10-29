@@ -12,6 +12,35 @@ export async function getMyProfile() {
   return snap.exists() ? { id: uid, ...snap.data() } : { id: uid };
 }
 
+export async function getMyRole() {
+  const uid = auth.currentUser?.uid;
+  if (!uid) return {};
+  const snap = await getDoc(doc(db, "roles", uid));
+  return snap.exists() ? snap.data() : {};
+}
+
+/** Returns true if the signed-in user has admin privileges. */
+export async function isAdmin() {
+  const role = await getMyRole();
+  return role?.admin === true;
+}
+
+/** Returns true if user has a specific capability flag or is admin. */
+export async function hasCap(capName) {
+  const role = await getMyRole();
+  return role?.admin === true || role?.[capName] === true;
+}
+
+/** Convenience: can this user moderate listings (or is admin)? */
+export async function canModerateListings() {
+  return await hasCap("canModerateListings");
+}
+
+/** Throw if the signed-in user is not admin (useful for guarding admin-only actions). */
+export async function requireAdmin() {
+  if (!(await isAdmin())) throw new Error("Admin privileges required");
+}
+
 /** Create or update profile fields for the signed-in user. */
 export async function upsertMyProfile(updates) {
   const uid = auth.currentUser?.uid;

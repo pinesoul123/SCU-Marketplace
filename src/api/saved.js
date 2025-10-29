@@ -1,4 +1,3 @@
-// src/api/saved.js
 import { db, auth } from "../lib/firebase.js";
 import { doc, setDoc, deleteDoc, getDoc, getDocs, collection } from "firebase/firestore";
 

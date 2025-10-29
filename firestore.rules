@@ -43,6 +43,29 @@ service cloud.firestore {
         && (resource.data.sellerID == request.auth.uid || isAdmin());
     }
 
+    // --- ROLES ---
+    // Allow users to read their own role doc (to check admin); admins can read any.
+    // Lock writes from clients; set via Console or Admin SDK only.
+    match /roles/{uid} {
+      allow read: if signedIn() && (uid == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    // --- REQUESTS (boards/posts) ---
+    // Public reads. Create by owner. Update/Delete by owner OR admin.
+    match /requests/{board}/posts/{postId} {
+      allow read: if true;
+
+      // Create must come from the signed-in user with createdBy == uid
+      allow create: if signedIn()
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.createdAt is timestamp;
+
+      // Update/Delete: owner or admin
+      allow update, delete: if signedIn()
+        && (resource.data.createdBy == request.auth.uid || isAdmin());
+    }
+
     // --- USERS / WISHLIST ---
     match /users/{uid} {
       match /saved/{listingId} {

@@ -119,6 +119,31 @@ export default function CreateListing() {
     return () => { cancelled = true; };
   }, [user?.uid]);
 
+  // Handle file selection + optional analysis
+  async function handleImageUpload(e) {
+    try {
+      const files = e?.target?.files;
+      const first = files && files.length ? files[0] : null;
+      setFile(first);
+      setAnalysisError('');
+      if (!first) return;
+
+      //safe to fail without blocking listing creation
+      setIsAnalyzing(true);
+      try {
+        await analyzeImage(first);
+      } catch (err) {
+        console.warn("[analyzeImage] failed (non-blocking):", err);
+        setAnalysisError("Image analysis failed. You can still submit the listing.");
+      } finally {
+        setIsAnalyzing(false);
+      }
+    } catch (err) {
+      console.error("[handleImageUpload] unexpected error", err);
+      setAnalysisError("Something went wrong while reading the image.");
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     if ((selectedCategory == "") || (selectedCondition == "")) {

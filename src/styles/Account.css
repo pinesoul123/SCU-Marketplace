@@ -3,7 +3,18 @@
 }
 
 #account-info-container {
-    width: 35%;
+    width: calc(35% - 40px);
+    margin-right: 40px;
+}
+
+#account-info {
+    height: 300px;
+}
+
+#account-info-container .button {
+    width: 100%;
+    display: block;
+    text-align: left;
 }
 
 #account-listings-container {

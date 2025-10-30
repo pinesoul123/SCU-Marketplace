@@ -2,14 +2,29 @@ import React from "react";
 import { useEffect, useState } from "react"
 import ListingCard from "../components/ListingCard.jsx"
 import { getMyListings } from "../api/account";
+import { auth } from "../lib/firebase";
+import {  signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import "../styles/Account.css";
 
 function AccountInfo() {
+  const navigate = useNavigate();
+  async function handleSignOut() {
+    await signOut(auth);
+    // alert("Signed out!");
+    navigate("/auth")
+  }
+
   return (
     <div id="account-info-container">
       <h1>Account</h1>
-      Name
-      Email
+      <div id="account-info">
+        Name
+        Email
+      </div>
+      <a href="/saved"><button className="button" >Saved Listings</button></a>
+      <button className="button">Edit Account Info</button>
+      <button className="button" onClick={handleSignOut}>Log Out</button>
     </div>
   )
 }

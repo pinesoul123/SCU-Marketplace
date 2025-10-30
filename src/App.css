@@ -31,7 +31,7 @@ a {
   color: var(--black);
   text-align: center;
   transition: 0.2s;
-
+  font-size: 1em;
 }
 
 .button:hover {

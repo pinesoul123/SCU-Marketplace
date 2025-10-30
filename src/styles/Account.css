@@ -1,0 +1,20 @@
+#account-container {
+    display: flex;
+}
+
+#account-info-container {
+    width: 35%;
+}
+
+#account-listings-container {
+    width: 65%;
+    margin-top: 30px;
+    --three: calc(33% - 10px);
+    display: grid;
+    grid-template-columns: var(--three) var(--three) var(--three);
+    gap: 10px;
+}
+
+.listing-card-image-container {
+    height: 18vw;
+}

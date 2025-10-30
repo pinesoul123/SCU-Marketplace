@@ -8,36 +8,12 @@
     cursor: pointer;
 }
 
-.listing-card-image-container {
-    height: 22vw;
-}
-
 .listing-card-image {
   min-width: 100%;
   min-height: 100%;
   max-width: 100%;
   max-height: 22vw;
   object-fit: cover;
-}
-
-@media only screen and (max-width: 1100px) {
-    .listing-card-image-container {
-      height: 28vw;
-    }
-
-    .listing-card-image {
-      max-height: 28vw;
-    }
-}
-
-@media only screen and (max-width: 800px) {
-    .listing-card-image-container {
-      height: 40vw;
-    }
-
-    .listing-card-image {
-      max-height: 40vw;
-    }
 }
 
 .listing-card-info {

@@ -1,23 +1,38 @@
+// Displays all request boards
 
-const boards = ["Graham", "Scipi"]
+import { Link } from "react-router-dom";
+
+const boards = [
+	"Graham",
+	"Finn",
+	"Swig",
+	"Dunne",
+	"Campisi",
+	"Sanfilippo",
+	"Casa Italiana",
+	"Sobrato",
+	"McWalsh",
+	"Nobili",
+	"Off Campus",
+  ]
 
 function Board({ name }) {
-    return (
-        <a class="button request-board-button" href="">
-            <h2>{name}</h2>
-        </a>
-    )
+	return (
+		<Link className="button request-board-button" to={`/requestboards/${encodeURIComponent(name)}`}>
+			<h2>{name}</h2>
+		</Link>
+	)
 }
 
 export default function RequestBoards() {
-    const renderBoards = boards.map(board => <Board name={board}></Board>);
+	const renderBoards = boards.map(board => <Board name={board}></Board>);
 
-    return (
-        <div id="content">
-            <h1>Request Boards</h1>
-            <div id="request-boards-container">
-                {renderBoards}
-            </div>
-        </div>
-    );
+	return (
+		<div id="content">
+			<h1>Request Boards</h1>
+			<div id="request-boards-container">
+				{renderBoards}
+			</div>
+		</div>
+	);
 }

@@ -5,8 +5,9 @@ import CreateListing from "./pages/CreateListing";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import RequestBoards from "./pages/RequestBoards";
+import RequestBoard from "./pages/RequestBoard";
 import Saved from "./pages/Saved";
-import Navbar from "./components/Navbar.jsx"
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/account" element={<Account />} />
         <Route path="/requestboards" element={<RequestBoards />} />
+        <Route path="/requestboards/:board" element={<RequestBoard />} />
         <Route path="/saved" element={<Saved />} />
       </Routes>
     </BrowserRouter>

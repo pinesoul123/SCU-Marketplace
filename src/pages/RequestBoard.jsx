@@ -42,7 +42,7 @@ export default function RequestBoard() {
             <ul>
               {items.map((it) => (
                 <li key={it.id}>
-                  <strong>{it.title}</strong>{it.category ? ` · ${it.category}` : ""}
+                  <strong>{it.title}</strong>{it.category ? ` (${it.category})` : ""}
                   {it.body && <p style={{ marginTop: "8px", marginBottom: "8px" }}>{it.body}</p>}
                 </li>
               ))}

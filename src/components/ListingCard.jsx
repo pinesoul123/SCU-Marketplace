@@ -1,13 +1,13 @@
 import "./ListingCard.css"
 
-export default function Listing({listingData}) {
+export default function ListingCard({id, listingData}) {
     let image = <></>;
     if (listingData.photoPaths != null) {
         image = <img className="listing-card-image" src={listingData.photoPaths[0]}></img>
     }
 
     return (
-        <a href={"/"} className="listing-card button">
+        <a href={"/listing?id=" + id} className="listing-card button">
             <div className="listing-card-image-container">
                 {image}
             </div>

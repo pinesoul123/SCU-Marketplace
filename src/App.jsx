@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Market from "./pages/Market";
 import CreateListing from "./pages/CreateListing";
+import Listing from "./pages/Listing";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import RequestBoards from "./pages/RequestBoards";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/requestboards" element={<RequestBoards />} />
         <Route path="/requestboards/:board" element={<RequestBoard />} />
         <Route path="/saved" element={<Saved />} />
+        <Route path="/listing" element={<Listing />} />
       </Routes>
     </BrowserRouter>
   );

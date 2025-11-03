@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react"
 import ListingCard from "../components/ListingCard.jsx"
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
 
 import "../styles/Market.css"
 
 async function getAllListings(searchQuery) {
-  return (await listings.getAllIds(searchQuery));
+  const navigate = useNavigate();
+  try {
+    const listingsDoc = await listings.getAllIds(searchQuery);
+    if (listingsDoc == null) {
+      navigate("/auth");
+    }
+    return listingsDoc;
+  } catch (error) {
+    navigate("/auth");
+  }
+  return null;
 }
 
 function PaginationArrowButton({step, content, numOfPages, currentPage, setCurrentPage}) {
@@ -91,6 +101,9 @@ function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) 
   }, [])
 
   let renderedListings = listingDocs;
+  if (renderedListings == null) {
+    return;
+  }
 
   // SEARCH ---------------------
   if ((searchQuery !== "") && (searchQuery !== null)) {
@@ -108,7 +121,7 @@ function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) 
   // PUSHING ITEMS --------------
   for (let i = startingIndex; i < endingIndex; i++) {
     if (renderedListings[i] != null) {
-      gallery.push(<ListingCard key={renderedListings[i].id} listingData={renderedListings[i].data()}></ListingCard>);
+      gallery.push(<ListingCard key={renderedListings[i].id} id={renderedListings[i].id} listingData={renderedListings[i].data()}></ListingCard>);
     }
   }
 

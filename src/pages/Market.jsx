@@ -5,8 +5,8 @@ import { listings } from "../api/listings";
 
 import "../styles/Market.css"
 
-async function getAllListings(searchQuery) {
-  return (await listings.getAllIds(searchQuery));
+async function getAllListings() {
+  return (await listings.getAllIds());
 }
 
 function PaginationArrowButton({step, content, numOfPages, currentPage, setCurrentPage}) {
@@ -65,7 +65,7 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
 
   const pagination = [];
   for (let i = lowerBound; i <= upperBound; i++) {
-    pagination.push(<PaginationPageButton pageIndex={i} currentPage={currentPage} setCurrentPage={setCurrentPage} />)
+    pagination.push(<PaginationPageButton key={i} pageIndex={i} currentPage={currentPage} setCurrentPage={setCurrentPage} />)
   }
   
   return (
@@ -82,7 +82,7 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
 function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) {
   const navigate = useNavigate();
   const [listingDocs, setListingDocs] = useState([]);
-  const getListingDocs = getAllListings(searchQuery);
+  const getListingDocs = getAllListings();
   
   useEffect(() => {
     getListingDocs

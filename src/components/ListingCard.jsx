@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./ListingCard.css"
 
 export default function ListingCard({id, listingData}) {
@@ -7,7 +8,7 @@ export default function ListingCard({id, listingData}) {
     }
 
     return (
-        <a href={"/listing?id=" + id} className="listing-card button">
+        <Link to={"/listing?id=" + id} className="listing-card button">
             <div className="listing-card-image-container">
                 {image}
             </div>
@@ -16,6 +17,6 @@ export default function ListingCard({id, listingData}) {
                 <br></br>
                 <span style={{ fontSize: "1.5em" }}><b>${listingData.price}</b></span>
             </div>
-        </a>
+        </Link>
     )
 }

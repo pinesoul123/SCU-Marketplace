@@ -6,18 +6,7 @@ import '../styles/Listing.css'
 
 
 async function getListing(id) {
-    const navigate = useNavigate();
-    try {
-        const listing = await listings.get(id);
-        if (listing == null) {
-            navigate("/auth");
-        }
-        console.log(listing)
-        return listing;
-    } catch {
-        navigate("/auth");
-    }
-    return null;
+    return (await listings.get(id));
 }
 
 async function save(id) {
@@ -89,53 +78,32 @@ function ImageGallery({imageURLs}) {
     )
 }
 
-function ListingInfo({listingId}) {
-    const [listingDoc, setListingDoc] = useState();
-    const getListingDoc = getListing(listingId);
-
-    // const [listingSaved, setListingSaved] = useState();
-    // const getListingSaved = save(listingId);
-
-    let listingData;
-    
-    useEffect(() => {
-        console.log("useeffect");
-        getListingDoc
-        .then(listingDoc => {
-            setListingDoc(listingDoc); 
-            console.log("wah3");
-            listingData = listingDoc.listing;
-        })
-        .catch((error) => {
-            console.log("something went wrong");
-            console.log(error);
-
-        });
-    }, [])
-    console.log("wah4");
-
-    let savedButton = <button className="button">Save</button>;
-    // if (!listingSaved) {
-    //     savedButton = <button className="button" disabled >Saved</button>;
-    // }
-
-    return (
-        <div id="listing-info">
-            <p>$</p>
-            <h2></h2>
-            <p>Seller</p>
-            <p></p>
-            <button className="button red">Message</button>
-            <br></br>
-            {savedButton}
-        </div>
-    );
-}
 
 export default function Listing() {
     const [searchParams, setSearchParams] = useSearchParams();
     const listingId = searchParams.get("id");
 
+    const navigate = useNavigate();
+    const [listingDoc, setListingDoc] = useState();
+    const getListingDoc = getListing(listingId);
+    
+    useEffect(() => {
+        getListingDoc
+        .then(listingDoc => {
+            setListingDoc(listingDoc); 
+        })
+        .catch((error) => {
+            console.log("something went wrong");
+            console.log(error);
+        });
+    }, [])
+    console.log("wah4");
+    const listingData = listingDoc.listing;
+
+    let savedButton = <button className="button">Save</button>;
+    // if (!listingSaved) {
+    //     savedButton = <button className="button" disabled >Saved</button>;
+    // }
 
     // Test images
     const imageURLs = [
@@ -148,7 +116,15 @@ export default function Listing() {
         <div id="content">
             <div id="listing-container">
                 <ImageGallery imageURLs={imageURLs} />
-                <ListingInfo listingId={listingId} />
+                <div id="listing-info">
+                    <p>${listingData.price}</p>
+                    <h2>{listingData.title}</h2>
+                    <p>Seller</p>
+                    <p>{listingData.desc}</p>
+                    <button className="button red">Message</button>
+                    <br></br>
+                    {savedButton}
+                </div>
             </div>
         </div>
     )

@@ -151,10 +151,9 @@ export default function Listing() {
             <div id="listing-container">
                 <ImageGallery imageURLs={listingData.photoURLs} />
                 <div id="listing-info">
-                    <p>${listingData.price}</p>
+                    <p id="listing-price">${(Math.round(listingData.price * 100) / 100).toFixed(2)}</p>
                     <h2>{listingData.title}</h2>
-                    <p>Seller</p>
-                    <p>{listingData.desc}</p>
+                    <p>{listingData.description}</p>
                     <button className="button red">Message</button>
                     <br></br>
                     <SaveButton listingId={listingId} />

@@ -229,3 +229,9 @@ a {
 .request-board-button h2 {
   margin-top: 0;
 }
+
+.create-request-button {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}

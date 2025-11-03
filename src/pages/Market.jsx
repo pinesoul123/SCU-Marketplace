@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import ListingCard from "../components/ListingCard.jsx"
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
 
 import "../styles/Market.css"
 
-async function getAllListings(searchQuery) {
-  return (await listings.getAllIds(searchQuery));
+async function getAllListings() {
+  return (await listings.getAllIds());
 }
 
 function PaginationArrowButton({step, content, numOfPages, currentPage, setCurrentPage}) {
@@ -65,7 +65,7 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
 
   const pagination = [];
   for (let i = lowerBound; i <= upperBound; i++) {
-    pagination.push(<PaginationPageButton pageIndex={i} currentPage={currentPage} setCurrentPage={setCurrentPage} />)
+    pagination.push(<PaginationPageButton key={i} pageIndex={i} currentPage={currentPage} setCurrentPage={setCurrentPage} />)
   }
   
   return (
@@ -80,17 +80,24 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
 }
 
 function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) {
+  const navigate = useNavigate();
   const [listingDocs, setListingDocs] = useState([]);
-  const getListingDocs = getAllListings(searchQuery);
+  const getListingDocs = getAllListings();
   
   useEffect(() => {
     getListingDocs
     .then(listingDocs => {
       setListingDocs(listingDocs); 
+    })
+    .catch((error) => {
+      navigate("/auth");
     });
   }, [])
 
   let renderedListings = listingDocs;
+  if (renderedListings == null) {
+    return;
+  }
 
   // SEARCH ---------------------
   if ((searchQuery !== "") && (searchQuery !== null)) {
@@ -108,7 +115,7 @@ function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) 
   // PUSHING ITEMS --------------
   for (let i = startingIndex; i < endingIndex; i++) {
     if (renderedListings[i] != null) {
-      gallery.push(<ListingCard key={renderedListings[i].id} listingData={renderedListings[i].data()}></ListingCard>);
+      gallery.push(<ListingCard key={renderedListings[i].id} id={renderedListings[i].id} listingData={renderedListings[i].data()}></ListingCard>);
     }
   }
 

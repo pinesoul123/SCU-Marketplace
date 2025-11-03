@@ -1,13 +1,14 @@
+import { Link } from "react-router-dom";
 import "./ListingCard.css"
 
-export default function Listing({listingData}) {
+export default function ListingCard({id, listingData}) {
     let image = <></>;
     if (listingData.photoPaths != null) {
         image = <img className="listing-card-image" src={listingData.photoPaths[0]}></img>
     }
 
     return (
-        <a href={"/"} className="listing-card button">
+        <Link to={"/listing?id=" + id} className="listing-card button">
             <div className="listing-card-image-container">
                 {image}
             </div>
@@ -16,6 +17,6 @@ export default function Listing({listingData}) {
                 <br></br>
                 <span style={{ fontSize: "1.5em" }}><b>${listingData.price}</b></span>
             </div>
-        </a>
+        </Link>
     )
 }

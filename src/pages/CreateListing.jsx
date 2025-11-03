@@ -131,7 +131,20 @@ export default function CreateListing() {
       //safe to fail without blocking listing creation
       setIsAnalyzing(true);
       try {
-        await analyzeImage(first);
+        const analysis = await analyzeImage(first);
+        // Updates form fields
+        if (analysis?.title) setTitle(analysis.title);
+        if (analysis?.price !== undefined && analysis?.price !== null) {
+          const p = Number(analysis.price);
+          if (!Number.isNaN(p)) setPrice(p);
+        }
+        if (analysis?.description) setDesc(analysis.description);
+        if (analysis?.category && categories.includes(analysis.category)) {
+          setSelectedCategory(analysis.category);
+        }
+        if (analysis?.condition && conditions.includes(analysis.condition)) {
+          setSelectedCondition(analysis.condition);
+        }
       } catch (err) {
         console.warn("[analyzeImage] failed (non-blocking):", err);
         setAnalysisError("Image analysis failed. You can still submit the listing.");

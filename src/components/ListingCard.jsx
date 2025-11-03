@@ -3,8 +3,8 @@ import "./ListingCard.css"
 
 export default function ListingCard({id, listingData}) {
     let image = <></>;
-    if (listingData.photoPaths != null) {
-        image = <img className="listing-card-image" src={listingData.photoPaths[0]}></img>
+    if (listingData.photoURLs != null) {
+        image = <img className="listing-card-image" src={listingData.photoURLs[0]}></img>
     }
 
     return (

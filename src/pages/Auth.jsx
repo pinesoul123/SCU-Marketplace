@@ -7,18 +7,21 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup.jsx";
+
 
 function SignInErrorPopup({render, setSignInError}) {
   if (render) {
     return (
-      <Popup message="There was an error signing in." buttonMessage="Close" onClick={setSignInError(false)}/>
+      <Popup message="There was an error signing in." buttonMessage="Close" onClick={() => setSignInError(false)}/>
     )
   }
 }
 
 //Handles user authentication (sign up, sign in, sign out)
 export default function Auth() {
+  const navigate = useNavigate();
   const { user, loading } = useAuth();
   //Local state for user input and signed-in user data
   const [email, setEmail] = useState("");
@@ -28,15 +31,23 @@ export default function Auth() {
 
   //Handles creating a new account and automatically signing in
   async function handleSignUp() {
-    const userCred = await createUserWithEmailAndPassword(auth, email, password);
-    setUser(userCred.user);
-    alert("Account created and signed in!");
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      setUser(userCred.user);
+      navigate("/");
+    } catch {
+      setSignInError(true);
+    }
   }
 
   //Handles logging in an existing user
   async function handleSignIn() {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    alert("Signed in!");
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      navigate("/");
+    } catch {
+      setSignInError(true);
+    }
   }
 
   //Handles logging out the current user
@@ -45,7 +56,6 @@ export default function Auth() {
     alert("Signed out!");
   }
 
-  //below is all temporary, I just used this to get past the sign in portion when testing
   return (
     <div id="content-center">
       <SignInErrorPopup render={signInError} setSignInError={setSignInError} />
@@ -81,7 +91,7 @@ export default function Auth() {
         <button className="button red" onClick={handleSignIn}>
           Sign In
         </button>
-        <button className="button red" onClick={handleSignOut}>Sign Out</button>
+        {user && (<button className="button red" onClick={handleSignOut}>Sign Out</button>)}
         </div>
 
         {user && (

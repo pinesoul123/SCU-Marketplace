@@ -1,4 +1,4 @@
-import { Link, useSearchParams, useLocation, Navigate, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/AuthProvider";
 
 function Search() {

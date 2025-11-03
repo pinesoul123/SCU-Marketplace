@@ -12,6 +12,7 @@ async function getListing(id) {
         if (listing == null) {
             navigate("/auth");
         }
+        console.log(listing)
         return listing;
     } catch {
         navigate("/auth");
@@ -94,27 +95,36 @@ function ListingInfo({listingId}) {
 
     // const [listingSaved, setListingSaved] = useState();
     // const getListingSaved = save(listingId);
+
+    let listingData;
     
     useEffect(() => {
+        console.log("useeffect");
         getListingDoc
         .then(listingDoc => {
             setListingDoc(listingDoc); 
             console.log("wah3");
+            listingData = listingDoc.listing;
+        })
+        .catch((error) => {
+            console.log("something went wrong");
+            console.log(error);
+
         });
     }, [])
-    const listingData = listingDoc.listing;
+    console.log("wah4");
 
-    let savedButton = <button className="button" onClick={save(listingId)}>Save</button>;
+    let savedButton = <button className="button">Save</button>;
     // if (!listingSaved) {
     //     savedButton = <button className="button" disabled >Saved</button>;
     // }
 
     return (
         <div id="listing-info">
-            <p>${listingData.price}</p>
-            <h2>{listingData.title}</h2>
+            <p>$</p>
+            <h2></h2>
             <p>Seller</p>
-            <p>{listingData.desc}</p>
+            <p></p>
             <button className="button red">Message</button>
             <br></br>
             {savedButton}

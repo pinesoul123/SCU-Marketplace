@@ -6,17 +6,7 @@ import { listings } from "../api/listings";
 import "../styles/Market.css"
 
 async function getAllListings(searchQuery) {
-  const navigate = useNavigate();
-  try {
-    const listingsDoc = await listings.getAllIds(searchQuery);
-    if (listingsDoc == null) {
-      navigate("/auth");
-    }
-    return listingsDoc;
-  } catch (error) {
-    navigate("/auth");
-  }
-  return null;
+  return (await listings.getAllIds(searchQuery));
 }
 
 function PaginationArrowButton({step, content, numOfPages, currentPage, setCurrentPage}) {
@@ -90,6 +80,7 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
 }
 
 function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) {
+  const navigate = useNavigate();
   const [listingDocs, setListingDocs] = useState([]);
   const getListingDocs = getAllListings(searchQuery);
   
@@ -97,6 +88,9 @@ function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) 
     getListingDocs
     .then(listingDocs => {
       setListingDocs(listingDocs); 
+    })
+    .catch((error) => {
+      navigate("/auth");
     });
   }, [])
 

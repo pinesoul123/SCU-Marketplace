@@ -1,4 +1,5 @@
 import { Link, useSearchParams, useLocation, Navigate, redirect, useNavigate } from "react-router-dom";
+import { useAuth } from "../lib/AuthProvider";
 
 function Search() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Search() {
 }
 
 export default function Navbar() {
+    const { user, loading } = useAuth();
     return (
         <nav id="navbar">
         <div className="navbar-left">
@@ -25,15 +27,16 @@ export default function Navbar() {
               <p><b>SCU<br />Marketplace</b></p>
             </div>
           </Link>
-          <Search />
+          {user && (<Search />)}
         </div>
 
-        <div className="navbar-right">
+        {user && (<div className="navbar-right">
           <Link to="/requestboards" className="navlink">Request Boards</Link>
           <Link to="/saved" className="navlink">Saved</Link>
           <Link to="/account" className="navlink">My Account</Link>
           <Link to="/new" className="navlink">New Listing</Link>
-        </div>
+        </div>)}
+        
       </nav>
     )
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
-import { saveListing, isSaved } from "../api/saved";
+import { saveListing, unsaveListing, isSaved } from "../api/saved";
 import '../styles/Listing.css'
 
 
@@ -11,6 +11,10 @@ async function getListing(id) {
 
 async function save(id) {
   return (await saveListing(id));
+}
+
+async function unsave(id) {
+  return (await unsaveListing(id));
 }
 
 async function saved(id) {
@@ -78,14 +82,53 @@ function ImageGallery({imageURLs}) {
     )
 }
 
+function SaveButton({listingId}) {
+    const [isDocSaved, setIsDocSaved] = useState(false);
+    const getIsDocSaved = saved(listingId);
+
+    useEffect(() => {
+        getIsDocSaved
+        .then(isDocSaved => {
+            setIsDocSaved(isDocSaved); 
+        })
+        .catch((error) => {
+            console.log("something went wrong");
+            console.log(error);
+        });
+    }, [])
+
+    if (isDocSaved == null) {
+        return;
+    }
+
+    function handleSave() {
+        save(listingId);
+        setIsDocSaved(true);
+    }
+    function handleUnsave() {
+        unsave(listingId);
+        setIsDocSaved(false);
+    }
+
+    let savedButton = <button className="button" onClick={handleSave}>Save</button>;
+    if (isDocSaved) {
+        savedButton = <button className="button" onClick={handleUnsave}>Unsave</button>;
+    }
+
+    return savedButton;
+}
+
 
 export default function Listing() {
     const [searchParams, setSearchParams] = useSearchParams();
     const listingId = searchParams.get("id");
 
+
     const navigate = useNavigate();
     const [listingDoc, setListingDoc] = useState();
     const getListingDoc = getListing(listingId);
+
+    
     
     useEffect(() => {
         getListingDoc
@@ -105,10 +148,7 @@ export default function Listing() {
     console.log("last-------------------------------------");
 
 
-    let savedButton = <button className="button">Save</button>;
-    // if (!listingSaved) {
-    //     savedButton = <button className="button" disabled >Saved</button>;
-    // }
+    
 
     // Test images
     const imageURLs = [
@@ -128,7 +168,7 @@ export default function Listing() {
                     <p>{listingData.desc}</p>
                     <button className="button red">Message</button>
                     <br></br>
-                    {savedButton}
+                    <SaveButton listingId={listingId} />
                 </div>
             </div>
         </div>

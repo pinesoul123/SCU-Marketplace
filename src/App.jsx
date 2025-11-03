@@ -8,18 +8,32 @@ import RequestBoards from "./pages/RequestBoards";
 import Saved from "./pages/Saved";
 import Navbar from "./components/Navbar.jsx"
 
+import { useAuth } from "./lib/AuthProvider";
+
+
 function App() {
-  return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Market />} />
+  const { user, loading } = useAuth();
+  let routes = (
+    <>
+    <Route path="/" element={<Market />} />
         <Route path="/market" element={<Market />} />
         <Route path="/new" element={<CreateListing />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/account" element={<Account />} />
         <Route path="/requestboards" element={<RequestBoards />} />
         <Route path="/saved" element={<Saved />} />
+    </>
+  )
+  if (!user) {
+    routes = (
+      <Route path="/*" element={<Auth />} />
+    )
+  }
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        {routes}
       </Routes>
     </BrowserRouter>
   );

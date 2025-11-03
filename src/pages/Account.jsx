@@ -40,7 +40,7 @@ function MyListings() {
     });
   }, [])
   
-  const myListings = myListingDocs.map(listingDoc => <ListingCard key={listingDoc.id} listingData={listingDoc}></ListingCard>)
+  const myListings = myListingDocs.map(listingDoc => <ListingCard key={listingDoc.id} id={listingDoc.id} listingData={listingDoc}></ListingCard>)
 
   return (
     <>

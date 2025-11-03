@@ -6,6 +6,20 @@
 
 import { useEffect, useState } from "react";
 import { getSavedListings } from "../api/saved";
+import ListingCard from "../components/ListingCard.jsx"
+import "../styles/Saved.css"
+
+function SavedListings({listingDocs}) {
+  const savedListings = listingDocs.map(listingDoc => <ListingCard key={listingDoc.id} id={listingDoc.id} listingData={listingDoc}></ListingCard>)
+
+  return (
+    <>
+      <div id="saved-listings-container">
+        {savedListings}
+      </div>
+    </>
+  )
+}
 
 export default function Saved() {
   const [savedItems, setSavedItems] = useState([]);
@@ -31,6 +45,7 @@ export default function Saved() {
   return (
     <div id="content">
       <h1>Saved Listings</h1>
+      <SavedListings listingDocs={savedItems} />
     </div>
   );
 }

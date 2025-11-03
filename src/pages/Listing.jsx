@@ -97,8 +97,13 @@ export default function Listing() {
             console.log(error);
         });
     }, [])
-    console.log("wah4");
+
+    if (listingDoc == null) {
+        return;
+    }
     const listingData = listingDoc.listing;
+    console.log("last-------------------------------------");
+
 
     let savedButton = <button className="button">Save</button>;
     // if (!listingSaved) {

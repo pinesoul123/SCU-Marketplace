@@ -4,6 +4,15 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getBoardRequests } from "../api/requestBoard";
 
+function Request({itemInfo}) {
+  return (
+    <div className="button request-board-button">
+      <strong>{itemInfo.title}</strong>{itemInfo.category ? ` (${itemInfo.category})` : ""}
+                  {itemInfo.body && <p style={{ marginTop: "8px", marginBottom: "8px" }}>{itemInfo.body}</p>}
+    </div>
+  )
+}
+
 export default function RequestBoard() {
   const { board } = useParams();  // board name
   const [items, setItems] = useState([]);
@@ -35,18 +44,15 @@ export default function RequestBoard() {
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       {!loading && !error && (
-        <div>
+        <div id="requests-container">
           {items.length === 0 ? (
             <p>No requests are posted</p>
           ) : (
-            <ul>
+            <>
               {items.map((it) => (
-                <li key={it.id}>
-                  <strong>{it.title}</strong>{it.category ? ` (${it.category})` : ""}
-                  {it.body && <p style={{ marginTop: "8px", marginBottom: "8px" }}>{it.body}</p>}
-                </li>
+                <Request key={it.id} itemInfo={it} />
               ))}
-            </ul>
+            </>
           )}
         </div>
       )}

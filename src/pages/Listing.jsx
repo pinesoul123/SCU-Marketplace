@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
+import { useAuth } from "../lib/AuthProvider";
 import { saveListing, unsaveListing, isSaved } from "../api/saved";
+import Popup from "../components/Popup";
 import '../styles/Listing.css'
 
 
@@ -19,6 +21,21 @@ async function unsave(id) {
 
 async function saved(id) {
   return (await isSaved(id));
+}
+
+async function removeListing(id) {
+    return (await listings.remove(id));
+}
+
+function RemovePopup() {
+    const navigate = useNavigate();
+
+    return (
+        <Popup message={"Listing removed."} buttonMessage={"Done"} 
+            onClick={() => {
+                navigate("/account");
+            }}/>
+    )
 }
 
 /* Step: the increment or decrement */
@@ -120,15 +137,14 @@ function SaveButton({listingId}) {
 
 
 export default function Listing() {
+    const { user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const listingId = searchParams.get("id");
 
+    const [removePopupActive, setRemovePopupActive] = useState(false);
 
-    const navigate = useNavigate();
     const [listingDoc, setListingDoc] = useState();
     const getListingDoc = getListing(listingId);
-
-    
     
     useEffect(() => {
         getListingDoc
@@ -141,22 +157,34 @@ export default function Listing() {
         });
     }, [])
 
+    function handleRemove() {
+        setRemovePopupActive(true);
+        removeListing(listingId);
+    }
+
     if (listingDoc == null) {
         return;
     }
     const listingData = listingDoc.listing;
+    const isMyListing = (user.uid == listingDoc.listing.sellerID);
 
     return (
         <div id="content">
+            { removePopupActive && <RemovePopup /> }
             <div id="listing-container">
                 <ImageGallery imageURLs={listingData.photoURLs} />
                 <div id="listing-info">
                     <p id="listing-price">${(Math.round(listingData.price * 100) / 100).toFixed(2)}</p>
                     <h2>{listingData.title}</h2>
                     <p>{listingData.description}</p>
-                    <button className="button red">Message</button>
-                    <br></br>
-                    <SaveButton listingId={listingId} />
+                    { !isMyListing && 
+                        <>
+                            <button className="button red">Message</button>
+                            <br></br>
+                            <SaveButton listingId={listingId} />
+                        </>
+                    }
+                    { isMyListing && <button className="button" onClick={handleRemove}>Remove</button>}
                 </div>
             </div>
         </div>

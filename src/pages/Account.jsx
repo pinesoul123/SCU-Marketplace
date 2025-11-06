@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import ListingCard from "../components/ListingCard.jsx"
 import { getMyListings } from "../api/account";
 import { auth } from "../lib/firebase";
-import {  signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "../styles/Account.css";
 

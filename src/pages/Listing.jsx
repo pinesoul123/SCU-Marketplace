@@ -3,6 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
 import { saveListing, unsaveListing, isSaved } from "../api/saved";
 import '../styles/Listing.css'
+import { startChat, listenToMessages, sendMessage } from "../api/chat.js";
+import { auth } from "../lib/firebase";
 
 
 async function getListing(id) {

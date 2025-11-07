@@ -1,7 +1,8 @@
 import { db, auth } from "../lib/firebase.js";
 import {
   doc, setDoc, getDoc, addDoc, collection, serverTimestamp,
-  getDocs, query, where, orderBy, onSnapshot
+  getDocs, query, where, orderBy, onSnapshot, updateDoc,
+  arrayUnion, arrayRemove
 } from "firebase/firestore";
 
 /**
@@ -23,6 +24,59 @@ export class ChatService {
     const buyerId = auth.currentUser?.uid;
     if (!buyerId) throw new Error("Sign in");
 
+    // Resolve sellerId from the listing document if not provided
+    if (!sellerId) {
+      try {
+        const lref = doc(db, "listings", listingId);
+        const lsnap = await getDoc(lref);
+        if (lsnap.exists()) {
+          const l = lsnap.data();
+          sellerId = (
+            l?.sellerId || l?.sellerID || l?.ownerId || l?.userId || l?.uid ||
+            l?.seller?.id || l?.seller?.uid ||
+            l?.createdBy?.id || l?.createdBy?.uid || null
+          );
+        }
+        if (!sellerId) {
+          // Try capitalized collection name fallback
+          const lref2 = doc(db, "Listings", listingId);
+          const lsnap2 = await getDoc(lref2);
+          if (lsnap2.exists()) {
+            const l2 = lsnap2.data();
+            sellerId = (
+              l2?.sellerId || l2?.sellerID || l2?.ownerId || l2?.userId || l2?.uid ||
+              l2?.seller?.id || l2?.seller?.uid ||
+              l2?.createdBy?.id || l2?.createdBy?.uid || null
+            );
+          }
+        }
+      } catch (e) {
+        // ignore and fall through to error below if still undefined
+      }
+    }
+    if (!sellerId) {
+      let inspectedKeys = [];
+      try {
+        const lref = doc(db, "listings", listingId);
+        const lsnap = await getDoc(lref);
+        if (lsnap.exists()) inspectedKeys = Object.keys(lsnap.data() || {});
+      } catch {}
+      try {
+        if (inspectedKeys.length === 0) {
+          const lref2 = doc(db, "Listings", listingId);
+          const lsnap2 = await getDoc(lref2);
+          if (lsnap2.exists()) inspectedKeys = Object.keys(lsnap2.data() || {});
+        }
+      } catch {}
+      throw new Error(
+        `Could not determine seller for this listing. Fields seen: ${inspectedKeys.join(', ')}`
+      );
+    }
+
+    if (buyerId === sellerId) {
+      throw new Error("You can't message your own listing.");
+    }
+
     const chatId = this.chatIdFor({ buyerId, sellerId, listingId });
     const ref = doc(db, "chats", chatId);
     const snap = await getDoc(ref);
@@ -32,6 +86,8 @@ export class ChatService {
         participants: [buyerId, sellerId],
         listingId,
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        closedFor: [], // array of userIds who have closed this chat
       });
     }
     return chatId;
@@ -48,6 +104,41 @@ export class ChatService {
       text: text.trim(),
       sentAt: serverTimestamp(),
     });
+
+    // bump chat activity and reopen for the sender if needed
+    const chatRef = doc(db, "chats", chatId);
+    await updateDoc(chatRef, {
+      updatedAt: serverTimestamp(),
+      closedFor: arrayRemove(uid),
+    });
+  }
+
+  // Close chat for the current user (reopenable)
+  async closeForMe(chatId) {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("Sign in");
+    const chatRef = doc(db, "chats", chatId);
+    await updateDoc(chatRef, {
+      closedFor: arrayUnion(uid),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  // Reopen chat for the current user
+  async reopenForMe(chatId) {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("Sign in");
+    const chatRef = doc(db, "chats", chatId);
+    await updateDoc(chatRef, {
+      closedFor: arrayRemove(uid),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  // Subscribe to the chat document (metadata like closed/open state)
+  listenToChat(chatId, onChange) {
+    const ref = doc(db, "chats", chatId);
+    return onSnapshot(ref, (snap) => onChange(snap.exists() ? { id: snap.id, ...snap.data() } : null));
   }
 
   // Fetch all messages (ordered)
@@ -71,7 +162,11 @@ export class ChatService {
     const uid = auth.currentUser?.uid;
     if (!uid) throw new Error("Sign in");
 
-    const q = query(collection(db, "chats"), where("participants", "array_contains", uid));
+    const q = query(
+      collection(db, "chats"),
+      where("participants", "array_contains", uid),
+      orderBy("updatedAt", "desc")
+    );
     const snap = await getDocs(q);
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   }
@@ -99,4 +194,16 @@ export function listenToMessages(chatId, onChange) {
 
 export async function fetchMyChats() {
   return chatService.fetchMyChats();
+}
+
+export async function closeChatForMe(chatId) {
+  return chatService.closeForMe(chatId);
+}
+
+export async function reopenChatForMe(chatId) {
+  return chatService.reopenForMe(chatId);
+}
+
+export function listenToChat(chatId, onChange) {
+  return chatService.listenToChat(chatId, onChange);
 }

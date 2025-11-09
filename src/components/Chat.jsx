@@ -9,6 +9,8 @@ function Messages({ chatId, selfId }) {
 
     const [messages, setMessages] = useState([]);
 
+    // This is the issue here. my guess is that its just updating on every tick. or smth. 
+    // i dont really know but its eating memory
     // listenToMessages(chatId, (msgs) => setMessages(msgs));
 
 

@@ -81,6 +81,7 @@ function Pagination({itemList, itemsPerPage, currentPage, setCurrentPage}) {
 
 function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [listingDocs, setListingDocs] = useState([]);
   const getListingDocs = getAllListings();
   
@@ -93,6 +94,18 @@ function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) 
       navigate("/auth");
     });
   }, [])
+  
+  // Resets to first page when filters change
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [
+    searchParams.get("category"),
+    searchParams.get("condition"),
+    searchParams.get("minPrice"),
+    searchParams.get("maxPrice"),
+    searchParams.get("location"),
+    setCurrentPage
+  ])
 
   let renderedListings = listingDocs;
   if (renderedListings == null) {
@@ -102,6 +115,46 @@ function ListingsPage({searchQuery, itemsPerPage, currentPage, setCurrentPage}) 
   // SEARCH ---------------------
   if ((searchQuery !== "") && (searchQuery !== null)) {
     renderedListings = listingDocs.filter(listing => listing.data().title.toLowerCase().includes(searchQuery.toLowerCase()))
+  }
+
+  // Renders filters
+  // Category filter
+  const categoryFilter = searchParams.get("category");
+  if (categoryFilter) {
+    const categories = categoryFilter.split(",");
+    renderedListings = renderedListings.filter(listing => categories.includes(listing.data().category));
+  }
+  
+  // Condition filter
+  const conditionFilter = searchParams.get("condition");
+  if (conditionFilter) {
+    const conditions = conditionFilter.split(",");
+    renderedListings = renderedListings.filter(listing => conditions.includes(listing.data().condition));
+  }
+  
+  // Minimum Price filter
+  const minPrice = searchParams.get("minPrice");
+  if (minPrice) {
+    const min = Number(minPrice);
+    if (!isNaN(min)) {
+      renderedListings = renderedListings.filter(listing => listing.data().price >= min);
+    }
+  }
+  
+  // Maximum Price filter
+  const maxPrice = searchParams.get("maxPrice");
+  if (maxPrice) {
+    const max = Number(maxPrice);
+    if (!isNaN(max)) {
+      renderedListings = renderedListings.filter(listing => listing.data().price <= max);
+    }
+  }
+  
+  // Location filter
+  const locationFilter = searchParams.get("location");
+  if (locationFilter) {
+    const locations = locationFilter.split(",");
+    renderedListings = renderedListings.filter(listing => locations.includes(listing.data().locationTag));
   }
 
   // GETTING PAGE LIMIT ---------

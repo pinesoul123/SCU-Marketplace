@@ -3,14 +3,71 @@ import { startChat, listenToMessages, sendMessage, chatService } from "../api/ch
 import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
 
-function Messages() {
+function Messages(chatId) {
+    const senderId = 1;
+    const recieverId = 2;
+
+    const testMessages = [
+        {
+            senderId: 1,
+            text: "wahwah1",
+            sentAt: "time"
+        },
+        {
+            senderId: 1,
+            text: "wahwah2",
+            sentAt: "time"
+        },
+        {
+            senderId: 2,
+            text: "wahwah3",
+            sentAt: "time"
+        },
+        {
+            senderId: 1,
+            text: "wahwah4",
+            sentAt: "time"
+        },
+        {
+            senderId: 2,
+            text: "wahwah5",
+            sentAt: "time"
+        },
+        {
+            senderId: 2,
+            text: "wahwah6",
+            sentAt: "time"
+        },
+        {
+            senderId: 1,
+            text: "Hi! Just saw your post about the new Namesake cover, would you explain what’s up with using red and blue pencil?",
+            sentAt: "time"
+        },
+        {
+            senderId: 2,
+            text: "For sure! I draw everything on paper and then color it digitally. I use col-erase pencils",
+            sentAt: "time"
+        },
+        {
+            senderId: 2,
+            text: "which is basically just color pencils you can erase - to sketch the art, and then I ink on top. Then I scan it, and remove the colors using the black and white function in Photoshop",
+            sentAt: "time"
+        }
+    ]
+
+    const messages = [];
+    testMessages.forEach((message) => {
+        if (message.senderId == senderId) {
+            messages.push(<p className="sent">{message.text}</p>)
+        } else if (message.senderId == recieverId) {
+            messages.push(<p className="recieved">{message.text}</p>)
+        }
+    })
+
     return (
         <div id="messages-container">
             <div id="messages-content">
-                <p className="recieved">this is a recieved message</p>
-                <p className="sent">this is a sent message</p>
-                <p className="sent"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nisi turpis, laoreet ut nunc aliquet, venenatis dignissim mauris. Duis ut tortor at elit cursus rhoncus aliquam ac felis. Sed ac enim quam. Phasellus arcu ipsum, ultrices non dolor non, vehicula ullamcorper orci. Nam rutrum imperdiet vestibulum. Nullam blandit euismod sollicitudin. Pellentesque lobortis vehicula ante, id egestas metus elementum ut. Aliquam augue nulla, semper vitae neque a, pulvinar ornare tellus. Curabitur venenatis cursus odio, sed consectetur libero posuere vel. Aenean commodo felis sem, a egestas nunc pretium eget. Curabitur non neque non urna aliquam porttitor. Vivamus molestie erat at nulla elementum, quis consequat nibh sollicitudin. </p>
-                <p className="recieved"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nisi turpis, laoreet ut nunc aliquet, venenatis dignissim mauris. Duis ut tortor at elit cursus rhoncus aliquam ac felis. Sed ac enim quam. Phasellus arcu ipsum, ultrices non dolor non, vehicula ullamcorper orci. Nam rutrum imperdiet vestibulum. Nullam blandit euismod sollicitudin. Pellentesque lobortis vehicula ante, id egestas metus elementum ut. Aliquam augue nulla, semper vitae neque a, pulvinar ornare tellus. Curabitur venenatis cursus odio, sed consectetur libero posuere vel. Aenean commodo felis sem, a egestas nunc pretium eget. Curabitur non neque non urna aliquam porttitor. Vivamus molestie erat at nulla elementum, quis consequat nibh sollicitudin. </p>
+                {messages}
             </div>
         </div>
     )

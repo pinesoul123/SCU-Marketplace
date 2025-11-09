@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { startChat, listenToMessages, sendMessage, chatService } from "../api/chat.js";
+import { listenToMessages, sendMessage, chatService } from "../api/chat.js";
 import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
 
-function Messages(chatId) {
-    const senderId = 1;
-    const recieverId = 2;
+function Messages({ chatId, selfId }) {
+    const ids = chatId.split("_");
+    const sellerId = (ids[1] == selfId) ? ids[2] : ids[1];
 
     const testMessages = [
         {
@@ -55,11 +55,13 @@ function Messages(chatId) {
         }
     ]
 
+    // listenToMessages(chatId, )
+
     const messages = [];
     testMessages.forEach((message) => {
-        if (message.senderId == senderId) {
+        if (message.senderId == selfId) {
             messages.push(<p className="sent">{message.text}</p>)
-        } else if (message.senderId == recieverId) {
+        } else if (message.senderId == sellerId) {
             messages.push(<p className="recieved">{message.text}</p>)
         }
     })
@@ -74,7 +76,8 @@ function Messages(chatId) {
 }
 
 export default function Chat({ chatId, chatActive, setChatActive }) {
-    // const [chatActive, setChatActive] = useState(listChatActive);
+    const selfId = auth.currentUser?.uid;
+
     function closeChat() {
         setChatActive(false);
     }
@@ -87,7 +90,7 @@ export default function Chat({ chatId, chatActive, setChatActive }) {
                     <button id="chat-close-button" className="button" onClick={closeChat}>X</button>
                     <div>Message</div>
                 </div>
-                <Messages chatId={chatId} />
+                <Messages chatId={chatId} selfId={selfId} />
                 <div id="input-container">
                     <input id="chat-input" type="text" placeholder="Message..."></input>
                 </div>

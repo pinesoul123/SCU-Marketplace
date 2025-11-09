@@ -23,11 +23,6 @@ async function saved(id) {
   return (await isSaved(id));
 }
 
-async function getChat(listingId, sellerId) {
-    console.log(listingId + " " + sellerId);
-    return (await chatService.startChat({ listingId, sellerId }));
-}
-
 /* Step: the increment or decrement */
 function GalleryButton({step, content, images, activeImage, setActiveImage}) {
     function handleClick() {
@@ -153,25 +148,8 @@ export default function Listing() {
         return;
     }
     const listingData = listingDoc.listing;
-    let chatActiveClass = "";
 
    async function handleMessage() {
-        // console.log(listingDoc.id + " " + listingData.sellerID);
-
-        // const getChatId = getChat(listingDoc.id, listingData.sellerID);
-
-        // getChatId
-        // .then(chatId => {
-        //     setChatId(chatId); 
-        // })
-        // .catch((error) => {
-        //     console.log("something went wrong");
-        //     console.log(error);
-        // });
-
-        //setChatActive(true);
-        //chatActiveClass = "chat-active";
-
         try {
             const id = await chatService.startChat({
                 listingId: listingDoc.id,

@@ -25,7 +25,7 @@ async function saved(id) {
 
 async function getChat(listingId, sellerId) {
     console.log(listingId + " " + sellerId);
-    return (await chatService.startChat(listingId, sellerId));
+    return (await chatService.startChat({ listingId, sellerId }));
 }
 
 /* Step: the increment or decrement */
@@ -155,7 +155,7 @@ export default function Listing() {
     const listingData = listingDoc.listing;
     let chatActiveClass = "";
 
-    function handleMessage() {
+   async function handleMessage() {
         // console.log(listingDoc.id + " " + listingData.sellerID);
 
         // const getChatId = getChat(listingDoc.id, listingData.sellerID);
@@ -169,8 +169,20 @@ export default function Listing() {
         //     console.log(error);
         // });
 
-        setChatActive(true);
-        chatActiveClass = "chat-active";
+        //setChatActive(true);
+        //chatActiveClass = "chat-active";
+
+        try {
+            const id = await chatService.startChat({
+                listingId: listingDoc.id,
+                sellerId: listingData.sellerID || listingData.sellerId
+            });
+            setChatId(id);
+            setChatActive(true);
+        } catch (e) {
+            console.error(e);
+            alert(e.message || "Failed to start chat");
+        }
     }
 
     return (

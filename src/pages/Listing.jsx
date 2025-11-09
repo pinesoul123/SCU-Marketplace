@@ -153,37 +153,40 @@ export default function Listing() {
         return;
     }
     const listingData = listingDoc.listing;
+    let chatActiveClass = "";
 
     function handleMessage() {
         // console.log(listingDoc.id + " " + listingData.sellerID);
 
-        const getChatId = getChat(listingDoc.id, listingData.sellerID);
+        // const getChatId = getChat(listingDoc.id, listingData.sellerID);
 
-        getChatId
-        .then(chatId => {
-            setChatId(chatId); 
-        })
-        .catch((error) => {
-            console.log("something went wrong");
-            console.log(error);
-        });
+        // getChatId
+        // .then(chatId => {
+        //     setChatId(chatId); 
+        // })
+        // .catch((error) => {
+        //     console.log("something went wrong");
+        //     console.log(error);
+        // });
+
+        setChatActive(true);
+        chatActiveClass = "chat-active";
     }
 
     return (
         <div id="content">
-            <button onClick={handleMessage}>Chat</button>
-            <div id="listing-container">
+            <Chat chatId={chatId} chatActive={chatActive} setChatActive={setChatActive}/>
+            <div id="listing-container" className={chatActive ? "chat-active" : ""}>
                 <ImageGallery imageURLs={listingData.photoURLs} />
                 <div id="listing-info">
                     <p id="listing-price">${(Math.round(listingData.price * 100) / 100).toFixed(2)}</p>
                     <h2>{listingData.title}</h2>
                     <p>{listingData.description}</p>
-                    <button className="button red">Message</button>
+                    <button className="button red" onClick={handleMessage}>Message</button>
                     <br></br>
                     <SaveButton listingId={listingId} />
                 </div>
             </div>
-            <Chat chatActive={true} chatId={chatId}/>
         </div>
     )
 }

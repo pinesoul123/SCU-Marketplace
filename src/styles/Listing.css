@@ -3,6 +3,11 @@
     display: grid;
     grid-template-columns: 60% 30%;
     gap: 30px;
+    transition: width 1s;
+}
+
+#listing-container.chat-active {
+    width: calc(70% - 10px);
 }
 
 #listing-gallery-container {
@@ -103,6 +108,10 @@
         grid-row: 2;
         flex-direction: row;
         justify-content: center;
+    }
+
+    #listing-container.chat-active {
+        width: calc(60% - 10px);
     }
 }
 

@@ -16,13 +16,18 @@ function Messages() {
     )
 }
 
-export default function Chat({ chatActive, chatId }) {
+export default function Chat({ chatId, chatActive, setChatActive }) {
+    // const [chatActive, setChatActive] = useState(listChatActive);
+    function closeChat() {
+        setChatActive(false);
+    }
+
     if (chatActive) {
 
         return (
             <div id="chat-container">
                 <div id="chat-heading-container">
-                    <button id="chat-close-button" className="button">X</button>
+                    <button id="chat-close-button" className="button" onClick={closeChat}>X</button>
                     <div>Message</div>
                 </div>
                 <Messages chatId={chatId} />

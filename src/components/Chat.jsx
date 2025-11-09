@@ -4,12 +4,12 @@ import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
 
 function Messages({ chatId, selfId }) {
-    const ids = chatId.split("_");
+    const ids = chatId.split("__");
     const sellerId = (ids[1] == selfId) ? ids[2] : ids[1];
 
     const [messages, setMessages] = useState([]);
 
-    listenToMessages(chatId, (msgs) => setMessages(msgs));
+    // listenToMessages(chatId, (msgs) => setMessages(msgs));
 
 
     const renderedMessages = [];

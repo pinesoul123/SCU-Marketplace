@@ -7,69 +7,24 @@ function Messages({ chatId, selfId }) {
     const ids = chatId.split("_");
     const sellerId = (ids[1] == selfId) ? ids[2] : ids[1];
 
-    const testMessages = [
-        {
-            senderId: 1,
-            text: "wahwah1",
-            sentAt: "time"
-        },
-        {
-            senderId: 1,
-            text: "wahwah2",
-            sentAt: "time"
-        },
-        {
-            senderId: 2,
-            text: "wahwah3",
-            sentAt: "time"
-        },
-        {
-            senderId: 1,
-            text: "wahwah4",
-            sentAt: "time"
-        },
-        {
-            senderId: 2,
-            text: "wahwah5",
-            sentAt: "time"
-        },
-        {
-            senderId: 2,
-            text: "wahwah6",
-            sentAt: "time"
-        },
-        {
-            senderId: 1,
-            text: "Hi! Just saw your post about the new Namesake cover, would you explain what’s up with using red and blue pencil?",
-            sentAt: "time"
-        },
-        {
-            senderId: 2,
-            text: "For sure! I draw everything on paper and then color it digitally. I use col-erase pencils",
-            sentAt: "time"
-        },
-        {
-            senderId: 2,
-            text: "which is basically just color pencils you can erase - to sketch the art, and then I ink on top. Then I scan it, and remove the colors using the black and white function in Photoshop",
-            sentAt: "time"
-        }
-    ]
+    const [messages, setMessages] = useState([]);
 
-    // listenToMessages(chatId, )
+    listenToMessages(chatId, (msgs) => setMessages(msgs));
 
-    const messages = [];
-    testMessages.forEach((message) => {
+
+    const renderedMessages = [];
+    messages.forEach((message) => {
         if (message.senderId == selfId) {
-            messages.push(<p className="sent">{message.text}</p>)
+            renderedMessages.push(<p className="sent">{message.text}</p>)
         } else if (message.senderId == sellerId) {
-            messages.push(<p className="recieved">{message.text}</p>)
+            renderedMessages.push(<p className="recieved">{message.text}</p>)
         }
     })
 
     return (
         <div id="messages-container">
             <div id="messages-content">
-                {messages}
+                {renderedMessages}
             </div>
         </div>
     )
@@ -83,6 +38,12 @@ export default function Chat({ chatId, chatActive, setChatActive }) {
     }
 
     if (chatActive) {
+        const handleSubmit = (e) =>{ 
+            e.preventDefault();
+            const message = e.target[0].value;
+            e.target[0].value = "";
+            sendMessage(chatId, message);
+        }
 
         return (
             <div id="chat-container">
@@ -91,9 +52,9 @@ export default function Chat({ chatId, chatActive, setChatActive }) {
                     <div>Message</div>
                 </div>
                 <Messages chatId={chatId} selfId={selfId} />
-                <div id="input-container">
+                <form id="input-container" onSubmit={handleSubmit}>
                     <input id="chat-input" type="text" placeholder="Message..."></input>
-                </div>
+                </form>
             </div>
         )
     }

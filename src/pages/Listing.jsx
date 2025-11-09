@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
 import { saveListing, unsaveListing, isSaved } from "../api/saved";
+import { startChat, chatService } from "../api/chat.js";
+import Chat from "../components/Chat.jsx";
 import '../styles/Listing.css'
-import { startChat, listenToMessages, sendMessage } from "../api/chat.js";
-import { auth } from "../lib/firebase";
 
 
 async function getListing(id) {
@@ -21,6 +21,11 @@ async function unsave(id) {
 
 async function saved(id) {
   return (await isSaved(id));
+}
+
+async function getChat(listingId, sellerId) {
+    console.log(listingId + " " + sellerId);
+    return (await chatService.startChat(listingId, sellerId));
 }
 
 /* Step: the increment or decrement */
@@ -125,11 +130,12 @@ export default function Listing() {
     const [searchParams, setSearchParams] = useSearchParams();
     const listingId = searchParams.get("id");
 
+    const [chatActive, setChatActive] = useState(false);
 
-    const navigate = useNavigate();
     const [listingDoc, setListingDoc] = useState();
     const getListingDoc = getListing(listingId);
 
+    const [chatId, setChatId] = useState();
     
     
     useEffect(() => {
@@ -148,8 +154,24 @@ export default function Listing() {
     }
     const listingData = listingDoc.listing;
 
+    function handleMessage() {
+        // console.log(listingDoc.id + " " + listingData.sellerID);
+
+        const getChatId = getChat(listingDoc.id, listingData.sellerID);
+
+        getChatId
+        .then(chatId => {
+            setChatId(chatId); 
+        })
+        .catch((error) => {
+            console.log("something went wrong");
+            console.log(error);
+        });
+    }
+
     return (
         <div id="content">
+            <button onClick={handleMessage}>Chat</button>
             <div id="listing-container">
                 <ImageGallery imageURLs={listingData.photoURLs} />
                 <div id="listing-info">
@@ -161,6 +183,7 @@ export default function Listing() {
                     <SaveButton listingId={listingId} />
                 </div>
             </div>
+            <Chat chatActive={true} chatId={chatId}/>
         </div>
     )
 }

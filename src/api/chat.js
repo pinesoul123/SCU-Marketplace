@@ -14,15 +14,16 @@ import {
  */
 export class ChatService {
   // Deterministic chat id builder
-  chatIdFor({ buyerId, sellerId, listingId }) {
+  chatIdFor(buyerId, sellerId, listingId) {
     const [a, b] = [buyerId, sellerId].sort();
     return `${listingId}__${a}__${b}`;
   }
 
   // Create or reuse chat for a given listing and seller
-  async startChat({ listingId, sellerId }) {
+  async startChat(listingId, sellerId) {
     const buyerId = auth.currentUser?.uid;
     if (!buyerId) throw new Error("Sign in");
+    // console.log(db.collection('chats'));
 
     // Resolve sellerId from the listing document if not provided
     if (!sellerId) {
@@ -80,6 +81,8 @@ export class ChatService {
     const chatId = this.chatIdFor({ buyerId, sellerId, listingId });
     const ref = doc(db, "chats", chatId);
     const snap = await getDoc(ref);
+    return;
+    console.log(snap);
 
     if (!snap.exists()) {
       await setDoc(ref, {

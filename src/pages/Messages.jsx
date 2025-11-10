@@ -1,5 +1,6 @@
 import { useEffect, useState} from "react";
 import { fetchMyChats } from "../api/chat.js";
+import { Link } from "react-router-dom";
 import { listings } from "../api/listings";
 import Chat from "../components/Chat";
 import "../styles/Messages.css";
@@ -56,6 +57,9 @@ export default function Messages() {
             <div id="messages-page-container">
                 <div id="chat-list">{chatList}</div>
                 <div id="wide-chat-container">
+                    <div id="wide-chat-heading">
+                        {currentChat && <Link to={"/listing?id=" + currentChat.split("__")[0]}>Listing</Link>}
+                    </div>
                     <Chat chatId={currentChat} chatActive={true} />
                 </div>
             </div>

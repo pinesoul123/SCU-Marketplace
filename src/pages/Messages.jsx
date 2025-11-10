@@ -38,23 +38,23 @@ export default function Messages() {
     }
 
     
-    // for (let chat of myChats) {
-    //     const listingId = chat.id.split("__")[0];
-    //     getListing(listingId).then(data => {
-    //         chatList.push(<button className="chat-list-item button" onClick={() => setCurrentChat(chat.id)}>
-    //             {data.listing.title}
-    //             </button>);
-    //         // setMyChatList(chatList);
-    //     });
-    //     // console.log(listing);
-    //     // chatList.push(<button className="chat-list-item button" onClick={() => setCurrentChat(chat.id)}>Chat</button>)
-    // }
+    for (let chat of myChats) {
+        // const listingId = chat.id.split("__")[0];
+        // getListing(listingId).then(data => {
+        //     chatList.push(<button className="chat-list-item button" onClick={() => setCurrentChat(chat.id)}>
+        //         {data.listing.title}
+        //         </button>);
+        //     // setMyChatList(chatList);
+        // });
+        // // console.log(listing);
+        chatList.push(<button className="chat-list-item button" onClick={() => setCurrentChat(chat.id)}>Chat</button>)
+    }
 
     return (
         <div id="content">
             <h1>Messages</h1>
             <div id="messages-page-container">
-                <div id="chat-list">{myChatList}</div>
+                <div id="chat-list">{chatList}</div>
                 <div id="wide-chat-container">
                     <Chat chatId={currentChat} chatActive={true} />
                 </div>

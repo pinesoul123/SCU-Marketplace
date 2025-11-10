@@ -34,6 +34,14 @@
     text-align: left;
 }
 
+.chat-list-item.active {
+    box-shadow: 0 0 5px var(--scu-red);
+}
+
+.chat-list-item.activ:hover {
+    box-shadow: 0 0 5px var(--scu-red);
+}
+
 #wide-chat-container {
     width: 60%;
     border: var(--grey) 1px solid;

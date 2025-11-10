@@ -120,6 +120,23 @@ function SaveButton({listingId}) {
     return savedButton;
 }
 
+function SideChatContainer({ chatId, chatActive, setChatActive }) {
+    function closeChat() {
+        setChatActive(false);
+    }
+
+    if (chatActive) {
+        return (
+            <div id="side-chat-container">
+                <div id="chat-heading-container">
+                        <button id="chat-close-button" className="button" onClick={closeChat}>X</button>
+                        <div>Message</div>
+                </div>
+                <Chat chatId={chatId} chatActive={chatActive} />
+            </div>
+        )
+    }
+}
 
 export default function Listing() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -165,7 +182,7 @@ export default function Listing() {
 
     return (
         <div id="content">
-            <Chat chatId={chatId} chatActive={chatActive} setChatActive={setChatActive}/>
+            <SideChatContainer chatId={chatId} chatActive={chatActive} setChatActive={setChatActive}/>
             <div id="listing-container" className={chatActive ? "chat-active" : ""}>
                 <ImageGallery imageURLs={listingData.photoURLs} />
                 <div id="listing-info">

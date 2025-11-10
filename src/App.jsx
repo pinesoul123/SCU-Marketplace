@@ -8,6 +8,7 @@ import Account from "./pages/Account";
 import RequestBoards from "./pages/RequestBoards";
 import RequestBoard from "./pages/RequestBoard";
 import Saved from "./pages/Saved";
+import Messages from "./pages/Messages.jsx";
 import Navbar from "./components/Navbar.jsx";
 
 import { useAuth } from "./lib/AuthProvider";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/requestboards/:board" element={<RequestBoard />} />
         <Route path="/saved" element={<Saved />} />
         <Route path="/listing" element={<Listing />} />
+        <Route path="/messages" element={<Messages />} />
     </>
   )
   if (!user) {

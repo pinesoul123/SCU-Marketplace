@@ -40,33 +40,25 @@ function Messages({ chatId, selfId }) {
 		)
 }
 
-export default function Chat({ chatId, chatActive, setChatActive }) {
+export default function Chat({ chatId, chatActive }) {
 		const selfId = auth.currentUser?.uid;
 
-		function closeChat() {
-				setChatActive(false);
-		}
-
 		if (chatActive) {
-				const handleSubmit = (e) =>{
-						e.preventDefault();
-						const message = e.target[0].value;
-						e.target[0].value = "";
-						sendMessage(chatId, message);
-				}
+            const handleSubmit = (e) =>{
+                    e.preventDefault();
+                    const message = e.target[0].value;
+                    e.target[0].value = "";
+                    sendMessage(chatId, message);
+            }
 
-				return (
-						<div id="chat-container">
-								<div id="chat-heading-container">
-										<button id="chat-close-button" className="button" onClick={closeChat}>X</button>
-										<div>Message</div>
-								</div>
-								<Messages chatId={chatId} selfId={selfId} />
-								<form id="input-container" onSubmit={handleSubmit}>
-										<input id="chat-input" type="text" placeholder="Message..."></input>
-								</form>
-						</div>
-				)
+            return (
+                <div id="chat-container">
+                    <Messages chatId={chatId} selfId={selfId} />
+                    <form id="input-container" onSubmit={handleSubmit}>
+                            <input id="chat-input" type="text" placeholder="Message..."></input>
+                    </form>
+                </div>
+            )
 		}
 
 }

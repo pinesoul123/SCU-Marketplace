@@ -1,28 +1,6 @@
 #chat-container {
-    border: var(--grey) 1px solid;
-    width: 35%;
-    min-width: 400px;
-    /* height: 600px; */
-    height: 100vh;
-    top:0;
-    right: 1px;
     display: grid;
-    grid-template-rows: 60px auto 70px;
-    position: fixed;
-    background-color: var(--white);
-}
-
-#chat-heading-container{
-    padding: 20px;
-    border-bottom: var(--grey) 1px solid;
-    text-align: center;
-}
-
-#chat-close-button {
-    position: absolute;
-    left: 7px;
-    top: 0;
-    border: none;
+    grid-template-rows: auto 70px;
 }
 
 #messages-container {

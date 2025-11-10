@@ -1,5 +1,5 @@
 import { useEffect, useState} from "react";
-import { listenToMessages, sendMessage, chatService } from "../api/chat.js";
+import { listenToMessages, sendMessage } from "../api/chat.js";
 import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
 
@@ -43,7 +43,7 @@ function Messages({ chatId, selfId }) {
 export default function Chat({ chatId, chatActive }) {
 		const selfId = auth.currentUser?.uid;
 
-		if (chatActive) {
+		if (chatActive && chatId) {
             const handleSubmit = (e) =>{
                     e.preventDefault();
                     const message = e.target[0].value;

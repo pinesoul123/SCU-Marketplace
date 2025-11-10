@@ -165,7 +165,7 @@ export class ChatService {
 
     const q = query(
       collection(db, "chats"),
-      where("participants", "array_contains", uid),
+      where("participants", "array-contains", uid),
       orderBy("updatedAt", "desc")
     );
     const snap = await getDocs(q);

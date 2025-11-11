@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState, useRef } from "react";
 import { listenToMessages, sendMessage } from "../api/chat.js";
 import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
@@ -7,20 +7,35 @@ function Messages({ chatId, selfId }) {
 		const ids = chatId.split("__");
 		const sellerId = (ids[1] == selfId) ? ids[2] : ids[1];
 
+        const messageBottom = useRef(null);
+
 		const [messages, setMessages] = useState([]);
+
+        function scrollToBottom() {
+            messageBottom.current.scrollIntoView({ 
+                behavior: "smooth",
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
 
 		// Using useEffect to hopefully prevent memory being eaten (leakage)
 		useEffect(() => {
-				if (!chatId || !selfId) return;
+            if (!chatId || !selfId) return;
 
-				// Subscribes to Firestore messages
-				const unsubscribe = listenToMessages(chatId, (msgs) => setMessages(msgs));
+            // Subscribes to Firestore messages
+            const unsubscribe = listenToMessages(chatId, (msgs) => setMessages(msgs));
 
-				// If chat isn't active or IDs change, unsubscribe
-				return () => {
-					if (unsubscribe) unsubscribe();
-				};
+            // If chat isn't active or IDs change, unsubscribe
+            return () => {
+                if (unsubscribe) unsubscribe();
+            };
+
 		}, [chatId, selfId]); // Rerun if IDs change
+
+        useEffect(() => {
+            scrollToBottom();
+        }, [messages])
 
 		const renderedMessages = [];
 		messages.forEach((message) => {
@@ -29,14 +44,17 @@ function Messages({ chatId, selfId }) {
 				} else if (message.senderId == sellerId) {
 						renderedMessages.push(<p className="recieved">{message.text}</p>)
 				}
-		})
+		});
+
+        
 
 		return (
-				<div id="messages-container">
-						<div id="messages-content">
-								{renderedMessages}
-						</div>
-				</div>
+            <div id="messages-container">
+                <div id="messages-content">
+                    {renderedMessages}
+                    <span ref={messageBottom}></span>
+                </div>
+            </div>
 		)
 }
 

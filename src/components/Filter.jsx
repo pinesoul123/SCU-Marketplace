@@ -130,7 +130,7 @@ export default function FilterPopup({ show, onClose }) {
       <div id="popup" style={{ maxWidth: "800px", minHeight: "600px", maxHeight: "80vh", overflowY: "auto", textAlign: "left" }}>
         <h2>Filters</h2>
         
-        <div>
+        <div id="filter-buttons-container">
           <button type="button" className="button red" onClick={handleApply}>
             Apply Filters
           </button>

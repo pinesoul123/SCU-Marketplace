@@ -195,7 +195,7 @@ a {
 }
 
 #content {
-  margin: 0 50px;
+  margin: 0 50px 50px 50px;
 }
 
 #content-center {
@@ -205,33 +205,4 @@ a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-#request-boards-container {
-  display: grid;
-  gap: 15px;
-  grid-template-columns: auto auto;
-}
-
-@media only screen and (max-width: 1050px) {
-  #request-boards-container {
-    grid-template-columns: auto;
-  }
-}
-
-.request-board-button {
-  margin: 0;
-  height: 100px;
-  display: block;
-  text-align: left;
-}
-
-.request-board-button h2 {
-  margin-top: 0;
-}
-
-.create-request-button {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
 }

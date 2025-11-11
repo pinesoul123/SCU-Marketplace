@@ -1,0 +1,75 @@
+#request-boards-container {
+    margin: 10px auto 40px auto;
+    display: grid;
+    gap: 15px;
+    grid-template-columns: auto auto;
+}
+
+@media only screen and (max-width: 1050px) {
+  #request-boards-container {
+    grid-template-columns: auto;
+  }
+}
+
+.request-board-button {
+  margin: 0;
+  height: 100px;
+  display: block;
+  text-align: left;
+}
+
+.request-board-button h2 {
+  margin-top: 0;
+}
+
+.create-request-button {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+#popup-container.request-popup {
+    position: fixed;
+    top: 0;
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    z-index: 1000;
+}
+
+#popup.request-popup {
+    max-height: 70%;
+}
+
+#request-form div {
+    width: 100%;
+    margin: 10px auto;
+}
+
+#request-form .first-row {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#request-body {
+    width: calc(100% - 60px);
+    height: 100px;
+    padding: 5px;
+}
+
+#request-form #control-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+#request-form #control-buttons button {
+    margin: 10px;
+}
+
+
+#requests-container {
+    margin: 10px auto 40px auto;
+    display: grid;
+    gap: 15px;
+    grid-template-columns: auto;
+}

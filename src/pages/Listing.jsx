@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
+import { useAuth } from "../lib/AuthProvider";
 import { saveListing, unsaveListing, isSaved } from "../api/saved";
-import { startChat, chatService } from "../api/chat.js";
+import { chatService } from "../api/chat.js";
 import Chat from "../components/Chat.jsx";
+import Popup from "../components/Popup";
 import '../styles/Listing.css'
 
 
@@ -21,6 +23,21 @@ async function unsave(id) {
 
 async function saved(id) {
   return (await isSaved(id));
+}
+
+async function removeListing(id) {
+    return (await listings.remove(id));
+}
+
+function RemovePopup() {
+    const navigate = useNavigate();
+
+    return (
+        <Popup message={"Listing removed."} buttonMessage={"Done"} 
+            onClick={() => {
+                navigate("/account");
+            }}/>
+    )
 }
 
 /* Step: the increment or decrement */
@@ -139,6 +156,7 @@ function SideChatContainer({ chatId, chatActive, setChatActive }) {
 }
 
 export default function Listing() {
+    const { user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const listingId = searchParams.get("id");
 
@@ -149,6 +167,8 @@ export default function Listing() {
 
     const [chatId, setChatId] = useState();
     
+    const [removePopupActive, setRemovePopupActive] = useState(false);
+
     
     useEffect(() => {
         getListingDoc
@@ -161,10 +181,16 @@ export default function Listing() {
         });
     }, [])
 
+    function handleRemove() {
+        setRemovePopupActive(true);
+        removeListing(listingId);
+    }
+
     if (listingDoc == null) {
         return;
     }
     const listingData = listingDoc.listing;
+    const isMyListing = (user.uid == listingDoc.listing.sellerID);
 
    async function handleMessage() {
         try {
@@ -182,6 +208,7 @@ export default function Listing() {
 
     return (
         <div id="content">
+            { removePopupActive && <RemovePopup /> }
             <SideChatContainer chatId={chatId} chatActive={chatActive} setChatActive={setChatActive}/>
             <div id="listing-container" className={chatActive ? "chat-active" : ""}>
                 <ImageGallery imageURLs={listingData.photoURLs} />
@@ -189,9 +216,14 @@ export default function Listing() {
                     <p id="listing-price">${(Math.round(listingData.price * 100) / 100).toFixed(2)}</p>
                     <h2>{listingData.title}</h2>
                     <p>{listingData.description}</p>
-                    <button className="button red" onClick={handleMessage}>Message</button>
-                    <br></br>
-                    <SaveButton listingId={listingId} />
+                    { !isMyListing && 
+                        <>
+                            <button className="button red" onClick={handleMessage}>Message</button>
+                            <br></br>
+                            <SaveButton listingId={listingId} />
+                        </>
+                    }
+                    { isMyListing && <button className="button" onClick={handleRemove}>Remove</button>}
                 </div>
             </div>
         </div>

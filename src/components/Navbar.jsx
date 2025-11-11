@@ -1,8 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/AuthProvider";
+import { useState } from "react";
+import FilterPopup from "./Filter.jsx";
 
 function Search() {
   const navigate = useNavigate();
+  const [showFilters, setShowFilters] = useState(false);
+  
   const handleSubmit = (e) =>{ 
     e.preventDefault();
     let path = `/market?search=` + e.target[0].value;
@@ -10,9 +14,18 @@ function Search() {
   }
 
   return (
-    <form id="searchbar-form" onSubmit={handleSubmit}>
-      <input id="searchbar" type="text" placeholder="Search items"></input>
-    </form>
+    <>
+      <form id="searchbar-form" onSubmit={handleSubmit}>
+        <input id="searchbar" type="text" placeholder="Search items"></input>
+      </form>
+      <button 
+        className="button" 
+        onClick={() => setShowFilters(true)}
+      >
+        Filters
+      </button>
+      <FilterPopup show={showFilters} onClose={() => setShowFilters(false)} />
+    </>
   )
 }
 

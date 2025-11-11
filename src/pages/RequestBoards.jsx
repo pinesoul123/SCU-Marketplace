@@ -3,6 +3,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { addBoardRequest } from "../api/requestBoard";
+import "../styles/RequestBoard.css";
 
 const boards = [
 	"Graham",
@@ -56,39 +57,40 @@ function CreateRequestForm({ show, onClose }) {
 
 	// Renders popup form to create new requests
 	return (
-		<div id="popup-container" style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000 }}>
+		<div id="popup-container" className="request-popup">
 			<div id="popup-bg" onClick={onClose}></div>
-			<div id="popup">
+			<div id="popup" className="request-popup">
 				<h2>Create Request</h2>
-				<form onSubmit={handleSubmit}>
-
-					<label htmlFor="request-board">Board *</label>
-					{/* Dropdown menu to select board name*/}
-					<select id="request-board" value={board} onChange={(e) => setBoard(e.target.value)} className="textbox" required>
-						<option value="">Select board...</option>
-						{boards.map(b => <option key={b} value={b}>{b}</option>)}
-					</select>
-
-					<label htmlFor="request-title">Title *</label>
-					{/* Text box for title */}
-					<input id="request-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="textbox" required />
-					
-					<label htmlFor="request-body">Description *</label>
-					{/* Text for body */}
-					<textarea id="request-body" value={body} onChange={(e) => setBody(e.target.value)} className="textbox" rows={4} required />
-
-					<label htmlFor="request-category">Category *</label>
-					{/* Dropdown menu to select category */}
-					<select id="request-category" value={category} onChange={(e) => setCategory(e.target.value)} className="textbox" required>
-						<option value="">Select category...</option>
-						{categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-					</select>
-
-					{/* Button to create request */}
-					<button type="submit" className="button red">Create</button>
-
-					{/* Button to cancel */}
-					<button type="button" className="button" onClick={onClose}>Cancel</button>
+				<form id="request-form" onSubmit={handleSubmit}>
+					<div className="first-row">
+						<span>
+							<label htmlFor="request-board">Board: </label>
+							<select id="request-board" value={board} onChange={(e) => setBoard(e.target.value)} className="textbox" required>
+								<option value="" disabled selected>Select board...</option>
+								{boards.map(b => <option key={b} value={b}>{b}</option>)}
+							</select>
+						</span>
+						<span>
+							<label htmlFor="request-title">Title: </label>
+							<input id="request-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="textbox" required />
+						</span>
+					</div>
+					<div>
+						<label htmlFor="request-body">Description: </label>
+						<br></br>
+						<textarea id="request-body" value={body} onChange={(e) => setBody(e.target.value)} className="textbox" rows={4} required />
+					</div>
+					<div>
+						<label htmlFor="request-category">Category: </label>
+						<select id="request-category" value={category} onChange={(e) => setCategory(e.target.value)} className="textbox" required>
+							<option value="" disabled selected>Select category...</option>
+							{categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+						</select>
+					</div>
+					<div id="control-buttons">
+						<button type="button" className="button" onClick={onClose}>Cancel</button>
+						<button type="submit" className="button red">Create</button>
+					</div>
 
 				</form>
 			</div>

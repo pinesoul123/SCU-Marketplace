@@ -46,6 +46,16 @@ service cloud.firestore {
       }
     }
 
+    // ----- REQUEST BOARDS -----
+    // Requests live at: requests/{boardName}/posts/{postId}
+    match /requests/{boardName}/posts/{postId} {
+      // Allow anyone to see request boards (you can tighten this to `signedIn()` if needed)
+      allow read: if true;
+
+      // Only signed-in users can create, update, or delete posts
+      allow create, update, delete: if signedIn();
+    }
+
     // ----- CHATS ---- 
     match /chats/{chatId} {
       // Allow GET on missing docs so client can check existence before creating

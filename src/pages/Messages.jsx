@@ -13,7 +13,15 @@ async function getChatsInfo(myChats) {
     const chatInfo = new Map();
     for (let chat of myChats) {
         const listingId = chat.id.split("__")[0];
-        chatInfo.set(chat.id, await listings.get(listingId));
+        const listingInfo = await listings.get(listingId)
+            .catch((error) => {
+            console.log("something went wrong wah");
+            console.log(error);
+        });
+        
+        if (listingInfo != null) {
+            chatInfo.set(chat.id, listingInfo);
+        } 
     }
     return chatInfo;
 }
@@ -40,16 +48,19 @@ function ChatList({ myChats, currentChat, setCurrentChat }) {
     const chatList = [];
 
     for (let chat of myChats) {
-        if (currentChat == chat.id) {
-            chatList.push(<button className="chat-list-item button active">
-                {myChatsInfo.get(chat.id).listing.title}
-                </button>)
-        } else {
-            chatList.push(<button className="chat-list-item button" 
-                onClick={() => setCurrentChat([chat.id, myChatsInfo.get(chat.id).listing.title])}>
+        if (myChatsInfo.get(chat.id) != null) {
+            if (currentChat == chat.id) {
+                chatList.push(<button className="chat-list-item button active">
                     {myChatsInfo.get(chat.id).listing.title}
-                </button>)
+                    </button>)
+            } else {
+                chatList.push(<button className="chat-list-item button" 
+                    onClick={() => setCurrentChat([chat.id, myChatsInfo.get(chat.id).listing.title])}>
+                        {myChatsInfo.get(chat.id).listing.title}
+                    </button>)
+            }
         }
+        
     }
 
     return (

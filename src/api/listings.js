@@ -42,7 +42,7 @@ export class Listings {
       price: Number(data.price || 0),
       category: data.category || null,
       condition: data.condition || null,
-      description: String(data.description || "").trim().slice(0, 100),
+      description: String(data.description || "").trim().slice(0, 500),
       locationTag: data.locationTag || null,
       photoURLs,
       photoPaths,

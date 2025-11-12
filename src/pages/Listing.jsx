@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { listings } from "../api/listings";
 import { useAuth } from "../lib/AuthProvider";
+import { isAdmin } from "../api/account.js";
 import { saveListing, unsaveListing, isSaved } from "../api/saved";
 import { chatService } from "../api/chat.js";
 import Chat from "../components/Chat.jsx";
@@ -191,6 +192,7 @@ export default function Listing() {
     }
     const listingData = listingDoc.listing;
     const isMyListing = (user.uid == listingDoc.listing.sellerID);
+    const admin = isAdmin(user.uid);
 
    async function handleMessage() {
         try {
@@ -223,7 +225,7 @@ export default function Listing() {
                             <SaveButton listingId={listingId} />
                         </>
                     }
-                    { isMyListing && <button className="button" onClick={handleRemove}>Remove</button>}
+                    { (isMyListing || admin) && <button className="button" onClick={handleRemove}>Remove</button>}
                 </div>
             </div>
         </div>

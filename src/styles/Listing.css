@@ -124,21 +124,12 @@
 #side-chat-container {
     border: var(--grey) 1px solid;
     width: 35%;
-    min-width: 400px;
     /* height: 600px; */
     height: 100vh;
     top:0;
     right: 1px;
-    display: grid;
-    grid-template-rows: 65px auto;
     position: fixed;
     background-color: var(--white);
-}
-
-#chat-heading-container{
-    padding: 20px;
-    border-bottom: var(--grey) 1px solid;
-    text-align: center;
 }
 
 #chat-close-button {

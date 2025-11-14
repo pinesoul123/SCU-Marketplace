@@ -1,6 +1,24 @@
 #chat-container {
+    height: 100%;
     display: grid;
-    grid-template-rows: auto 70px;
+    grid-template-rows: 60px auto 70px;
+}
+
+#messages-header {
+    height: 60px;
+    box-sizing: border-box;
+    border-bottom: var(--grey) 1px solid;
+    text-align: center;
+}
+
+#messages-header a {
+    display: block;
+    padding: 16px;
+}
+
+#messages-header a:hover {
+    color: var(--scu-red);
+    cursor: pointer;
 }
 
 #messages-container {

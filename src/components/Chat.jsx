@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { listenToMessages, sendMessage } from "../api/chat.js";
+import { Link } from "react-router-dom";
 import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
 
@@ -58,7 +59,7 @@ function Messages({ chatId, selfId }) {
 		)
 }
 
-export default function Chat({ chatId, chatActive }) {
+export default function Chat({ chatId, chatTitle, chatActive }) {
 		const selfId = auth.currentUser?.uid;
 
 		if (chatActive && chatId) {
@@ -71,8 +72,11 @@ export default function Chat({ chatId, chatActive }) {
 
             return (
                 <div id="chat-container">
+                    <div id="messages-header">
+                        <Link to={"/listing?id=" + chatId.split("__")[0]}>{chatTitle}</Link>
+                    </div>
                     <Messages chatId={chatId} selfId={selfId} />
-                    <form id="input-container" onSubmit={handleSubmit}>
+                    <form id="input-container" onSubmit={handleSubmit} autocomplete="off">
                             <input id="chat-input" type="text" placeholder="Message..."></input>
                     </form>
                 </div>

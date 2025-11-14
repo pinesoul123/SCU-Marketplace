@@ -71,11 +71,7 @@ function ChatList({ myChats, currentChat, setCurrentChat }) {
 
     for (let chat of myChats) {
         if (myChatsInfo.get(chat.id) != null) {
-            if (currentChat == chat.id) {
-                chatList.push(<ChatButton chat={chat} listingTitle={myChatsInfo.get(chat.id).listing.title} isCurrentChat={true} />)
-            } else {
-                chatList.push(<ChatButton chat={chat} listingTitle={myChatsInfo.get(chat.id).listing.title} isCurrentChat={false} setCurrentChat={setCurrentChat}/>)
-            }
+            chatList.push(<ChatButton chat={chat} listingTitle={myChatsInfo.get(chat.id).listing.title} isCurrentChat={currentChat == chat.id} setCurrentChat={setCurrentChat}/>)
         }
         
     }
@@ -113,10 +109,7 @@ export default function Messages() {
             <div id="messages-page-container">
                 <ChatList myChats={myChats} currentChat={currentChat[0]} setCurrentChat={setCurrentChat} />
                 <div id="wide-chat-container">
-                    <div id="wide-chat-heading">
-                        {currentChat && <Link to={"/listing?id=" + currentChat[0].split("__")[0]}>{currentChat[1]}</Link>}
-                    </div>
-                    <Chat chatId={currentChat[0]} chatActive={true} />
+                    <Chat chatId={currentChat[0]} chatTitle={currentChat[1]} chatActive={true} />
                 </div>
             </div>
         </div>

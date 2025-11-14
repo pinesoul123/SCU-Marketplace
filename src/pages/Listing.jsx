@@ -146,11 +146,8 @@ function SideChatContainer({ chatId, chatActive, setChatActive }) {
     if (chatActive) {
         return (
             <div id="side-chat-container">
-                <div id="chat-heading-container">
-                        <button id="chat-close-button" className="button" onClick={closeChat}>X</button>
-                        <div>Message</div>
-                </div>
-                <Chat chatId={chatId} chatActive={chatActive} />
+                <button id="chat-close-button" className="button" onClick={closeChat}>X</button>
+                <Chat chatId={chatId} chatTitle={"Message"} chatActive={chatActive} />
             </div>
         )
     }

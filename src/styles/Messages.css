@@ -57,23 +57,3 @@
     border: var(--grey) 1px solid;
     border-left: none;
 }
-
-#wide-chat-heading {
-    height: 40px;
-    border-bottom: var(--grey) 1px solid;
-    text-align: center;
-}
-
-#wide-chat-heading a {
-    display: block;
-    padding: 7px;
-}
-
-#wide-chat-heading a:hover {
-    color: var(--scu-red);
-    cursor: pointer;
-}
-
-#wide-chat-container > #chat-container {
-    height: calc(100% - 41px);
-}

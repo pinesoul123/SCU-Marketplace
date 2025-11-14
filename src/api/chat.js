@@ -171,6 +171,17 @@ export class ChatService {
     const snap = await getDocs(q);
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   }
+
+  async fetchChat(chatId) {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("Sign in");
+
+    const ref = doc(db, "chats", chatId);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) throw new Error("Chat not found");
+
+    return snap.data();
+  }
 }
 
 // Singleton instance for shared use
@@ -195,6 +206,10 @@ export function listenToMessages(chatId, onChange) {
 
 export async function fetchMyChats() {
   return chatService.fetchMyChats();
+}
+
+export async function fetchChat(chatId) {
+  return chatService.fetchChat(chatId);
 }
 
 export async function closeChatForMe(chatId) {

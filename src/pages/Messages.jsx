@@ -16,8 +16,7 @@ async function getChatsInfo(myChats) {
         const listingId = chat.id.split("__")[0];
         const listingInfo = await listings.get(listingId)
             .catch((error) => {
-            console.log("something went wrong wah");
-            console.log(error);
+            console.log("Listing not found");
         });
         
         if (listingInfo != null) {
@@ -34,12 +33,13 @@ function ChatButton({ chat, listingTitle, isCurrentChat, setCurrentChat = {}}) {
                 </button>
     
     if (chat.closedFor.includes(auth.currentUser?.uid)) {
-        button = <button className="chat-list-item button disabled">
+        button = <button className="chat-list-item button closed"
+                    onClick={() => setCurrentChat({id: chat.id, title: listingTitle})}>
                     {listingTitle}
                 </button>
     } else if (!isCurrentChat) {
         button = <button className="chat-list-item button" 
-            onClick={() => setCurrentChat([chat.id, listingTitle])}>
+            onClick={() => setCurrentChat({id: chat.id, title: listingTitle})}>
                 {listingTitle}
             </button>
     }
@@ -71,7 +71,7 @@ function ChatList({ myChats, currentChat, setCurrentChat }) {
 
     for (let chat of myChats) {
         if (myChatsInfo.get(chat.id) != null) {
-            chatList.push(<ChatButton chat={chat} listingTitle={myChatsInfo.get(chat.id).listing.title} isCurrentChat={currentChat == chat.id} setCurrentChat={setCurrentChat}/>)
+            chatList.push(<ChatButton chat={chat} listingTitle={myChatsInfo.get(chat.id).listing.title} isCurrentChat={currentChat.id == chat.id} setCurrentChat={setCurrentChat}/>)
         }
         
     }
@@ -82,7 +82,7 @@ function ChatList({ myChats, currentChat, setCurrentChat }) {
 }
 
 export default function Messages() {
-    const [currentChat, setCurrentChat] = useState(["", ""]);
+    const [currentChat, setCurrentChat] = useState({id: null, title: null});
 
     const [myChats, setMyChats] = useState();
     const getMyChats = getChats();     
@@ -107,9 +107,9 @@ export default function Messages() {
         <div id="content">
             <h1>Messages</h1>
             <div id="messages-page-container">
-                <ChatList myChats={myChats} currentChat={currentChat[0]} setCurrentChat={setCurrentChat} />
+                <ChatList myChats={myChats} currentChat={currentChat} setCurrentChat={setCurrentChat} />
                 <div id="wide-chat-container">
-                    <Chat chatId={currentChat[0]} chatTitle={currentChat[1]} chatActive={true} />
+                    <Chat chatId={currentChat.id} chatTitle={currentChat.title} chatActive={true} />
                 </div>
             </div>
         </div>

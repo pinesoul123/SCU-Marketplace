@@ -44,12 +44,8 @@
     box-shadow: 0 0 5px var(--scu-red);
 }
 
-.chat-list-item.disabled {
+.chat-list-item.closed {
     background-color: var(--light-grey);
-}
-
-.chat-list-item.disabled:hover {
-    box-shadow: none;
 }
 
 #wide-chat-container {

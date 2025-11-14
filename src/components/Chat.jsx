@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import { listenToMessages, sendMessage } from "../api/chat.js";
+import { listenToMessages, sendMessage, fetchChat } from "../api/chat.js";
 import { Link } from "react-router-dom";
 import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
 
-function Messages({ chatId, selfId }) {
+function Messages({ chatId, selfId, closed }) {
 		const ids = chatId.split("__");
 		const sellerId = (ids[1] == selfId) ? ids[2] : ids[1];
 
@@ -63,6 +63,24 @@ export default function Chat({ chatId, chatTitle, chatActive }) {
 		const selfId = auth.currentUser?.uid;
 
 		if (chatActive && chatId) {
+            const [chatInfo, setChatInfo] = useState();
+            const getChatInfo = fetchChat(chatId);
+
+            useEffect(() => {
+                getChatInfo
+                .then(chatInfo => {
+                    setChatInfo(chatInfo);
+                })
+                .catch((error) => {
+                    console.log("something went wrong");
+                    console.log(error);
+                });
+            }, [chatId]);
+
+            if (chatInfo == null) {
+                return;
+            }
+
             const handleSubmit = (e) =>{
                     e.preventDefault();
                     const message = e.target[0].value;
@@ -70,15 +88,25 @@ export default function Chat({ chatId, chatTitle, chatActive }) {
                     sendMessage(chatId, message);
             }
 
+            const closedForMe = chatInfo.closedFor.includes(selfId);
+
+            const messageInput = (closedForMe) ? 
+                    (<form id="input-container" onSubmit={handleSubmit} autocomplete="off">
+                            <input id="chat-input" type="text" placeholder="Message..." disabled></input>
+                    </form>) 
+                    : 
+                    (<form id="input-container" onSubmit={handleSubmit} autocomplete="off">
+                            <input id="chat-input" type="text" placeholder="Message..."></input>
+                    </form>); 
+
             return (
                 <div id="chat-container">
                     <div id="messages-header">
                         <Link to={"/listing?id=" + chatId.split("__")[0]}>{chatTitle}</Link>
+
                     </div>
-                    <Messages chatId={chatId} selfId={selfId} />
-                    <form id="input-container" onSubmit={handleSubmit} autocomplete="off">
-                            <input id="chat-input" type="text" placeholder="Message..."></input>
-                    </form>
+                    <Messages chatId={chatId} selfId={selfId} closed={closedForMe} />
+                    {messageInput}
                 </div>
             )
 		}

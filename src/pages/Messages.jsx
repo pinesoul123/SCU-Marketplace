@@ -1,7 +1,8 @@
 import { useEffect, useState} from "react";
-import { fetchMyChats } from "../api/chat.js";
+import { fetchMyChats, closeChatForMe, reopenChatForMe } from "../api/chat.js";
 import { Link } from "react-router-dom";
 import { listings } from "../api/listings";
+import { auth } from "../lib/firebase";
 import Chat from "../components/Chat";
 import "../styles/Messages.css";
 
@@ -24,6 +25,27 @@ async function getChatsInfo(myChats) {
         } 
     }
     return chatInfo;
+}
+
+function ChatButton({ chat, listingTitle, isCurrentChat, setCurrentChat = {}}) {
+
+    let button = <button className="chat-list-item button active">
+                    {listingTitle}
+                </button>
+    
+    if (chat.closedFor.includes(auth.currentUser?.uid)) {
+        button = <button className="chat-list-item button disabled">
+                    {listingTitle}
+                </button>
+    } else if (!isCurrentChat) {
+        button = <button className="chat-list-item button" 
+            onClick={() => setCurrentChat([chat.id, listingTitle])}>
+                {listingTitle}
+            </button>
+    }
+    return (
+        (button)
+    )
 }
 
 function ChatList({ myChats, currentChat, setCurrentChat }) {
@@ -50,14 +72,9 @@ function ChatList({ myChats, currentChat, setCurrentChat }) {
     for (let chat of myChats) {
         if (myChatsInfo.get(chat.id) != null) {
             if (currentChat == chat.id) {
-                chatList.push(<button className="chat-list-item button active">
-                    {myChatsInfo.get(chat.id).listing.title}
-                    </button>)
+                chatList.push(<ChatButton chat={chat} listingTitle={myChatsInfo.get(chat.id).listing.title} isCurrentChat={true} />)
             } else {
-                chatList.push(<button className="chat-list-item button" 
-                    onClick={() => setCurrentChat([chat.id, myChatsInfo.get(chat.id).listing.title])}>
-                        {myChatsInfo.get(chat.id).listing.title}
-                    </button>)
+                chatList.push(<ChatButton chat={chat} listingTitle={myChatsInfo.get(chat.id).listing.title} isCurrentChat={false} setCurrentChat={setCurrentChat}/>)
             }
         }
         

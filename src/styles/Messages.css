@@ -30,16 +30,26 @@
 .chat-list-item {
     width: 100%;
     height: 100px;
-    display: block;
     text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .chat-list-item.active {
     box-shadow: 0 0 5px var(--scu-red);
 }
 
-.chat-list-item.activ:hover {
+.chat-list-item.active:hover {
     box-shadow: 0 0 5px var(--scu-red);
+}
+
+.chat-list-item.disabled {
+    background-color: var(--light-grey);
+}
+
+.chat-list-item.disabled:hover {
+    box-shadow: none;
 }
 
 #wide-chat-container {

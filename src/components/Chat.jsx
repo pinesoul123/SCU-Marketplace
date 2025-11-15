@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { listenToMessages, sendMessage, fetchChat } from "../api/chat.js";
+import { listenToMessages, sendMessage, fetchChat, closeChatForMe, reopenChatForMe } from "../api/chat.js";
 import { Link } from "react-router-dom";
 import { auth } from "../lib/firebase";
 import "../styles/Chat.css"
@@ -13,6 +13,7 @@ function Messages({ chatId, selfId, closed }) {
 		const [messages, setMessages] = useState([]);
 
         function scrollToBottom() {
+            // console.log("scroll");
             messageBottom.current.scrollIntoView({ 
                 behavior: "smooth",
                 block: 'nearest',
@@ -53,10 +54,23 @@ function Messages({ chatId, selfId, closed }) {
             <div id="messages-container">
                 <div id="messages-content">
                     {renderedMessages}
+                    {closed && <p id="chat-closed-message">This chat is closed</p>}
                     <span ref={messageBottom}></span>
                 </div>
             </div>
 		)
+}
+
+function ActiveChatButton({ chatId, closedForMe }) {      
+    let button = <button id="close-button" className="button" onClick={() => closeChatForMe(chatId)}>Close Chat</button>;
+    if (closedForMe) {
+        button = <button id="reopen-button" className="button red" onClick={() => reopenChatForMe(chatId)}>Reopen Chat</button>;
+    }
+    return (
+        <div>
+            {button}
+        </div>
+    )
 }
 
 export default function Chat({ chatId, chatTitle, chatActive }) {
@@ -64,9 +78,12 @@ export default function Chat({ chatId, chatTitle, chatActive }) {
 
 		if (chatActive && chatId) {
             const [chatInfo, setChatInfo] = useState();
+
             const getChatInfo = fetchChat(chatId);
 
+
             useEffect(() => {
+                console.log("useEffect");
                 getChatInfo
                 .then(chatInfo => {
                     setChatInfo(chatInfo);
@@ -81,6 +98,7 @@ export default function Chat({ chatId, chatTitle, chatActive }) {
                 return;
             }
 
+
             const handleSubmit = (e) =>{
                     e.preventDefault();
                     const message = e.target[0].value;
@@ -89,6 +107,7 @@ export default function Chat({ chatId, chatTitle, chatActive }) {
             }
 
             const closedForMe = chatInfo.closedFor.includes(selfId);
+
 
             const messageInput = (closedForMe) ? 
                     (<form id="input-container" onSubmit={handleSubmit} autocomplete="off">
@@ -102,8 +121,9 @@ export default function Chat({ chatId, chatTitle, chatActive }) {
             return (
                 <div id="chat-container">
                     <div id="messages-header">
+                        <div></div>
                         <Link to={"/listing?id=" + chatId.split("__")[0]}>{chatTitle}</Link>
-
+                        <ActiveChatButton chatId={chatId} closedForMe={closedForMe}/>
                     </div>
                     <Messages chatId={chatId} selfId={selfId} closed={closedForMe} />
                     {messageInput}

@@ -1,5 +1,5 @@
 import { useEffect, useState} from "react";
-import { fetchMyChats, closeChatForMe, reopenChatForMe } from "../api/chat.js";
+import { fetchMyChats } from "../api/chat.js";
 import { Link } from "react-router-dom";
 import { listings } from "../api/listings";
 import { auth } from "../lib/firebase";

@@ -26,6 +26,14 @@ async function getChatsInfo(myChats) {
     return chatInfo;
 }
 
+//create your forceUpdate hook
+function useForceUpdate(){
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => value + 1); // update state to force render
+    // A function that increment 👆🏻 the previous state like here 
+    // is better than directly setting `setValue(value + 1)`
+}
+
 function ChatButton({ chat, listingTitle, isCurrentChat, setCurrentChat = {}}) {
 
     let button = <button className="chat-list-item button active">
@@ -82,6 +90,8 @@ function ChatList({ myChats, currentChat, setCurrentChat }) {
 }
 
 export default function Messages() {
+    const rerender = useForceUpdate();
+
     const [currentChat, setCurrentChat] = useState({id: null, title: null});
 
     const [myChats, setMyChats] = useState();
@@ -109,7 +119,7 @@ export default function Messages() {
             <div id="messages-page-container">
                 <ChatList myChats={myChats} currentChat={currentChat} setCurrentChat={setCurrentChat} />
                 <div id="wide-chat-container">
-                    <Chat chatId={currentChat.id} chatTitle={currentChat.title} chatActive={true} />
+                    <Chat chatId={currentChat.id} chatTitle={currentChat.title} chatActive={true} rerender={rerender} />
                 </div>
             </div>
         </div>

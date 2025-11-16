@@ -61,10 +61,19 @@ function Messages({ chatId, selfId, closed }) {
 		)
 }
 
-function ActiveChatButton({ chatId, closedForMe }) {      
-    let button = <button id="close-button" className="button" onClick={() => closeChatForMe(chatId)}>Close Chat</button>;
+function ActiveChatButton({ chatId, closedForMe, rerender }) {   
+    function handleClose(chatId) {
+        closeChatForMe(chatId);
+        rerender();
+    }
+    function handleReopen(chatId) {
+        reopenChatForMe(chatId);
+        rerender();
+    }
+
+    let button = <button id="close-button" className="button" onClick={() => handleClose(chatId)}>Close Chat</button>;
     if (closedForMe) {
-        button = <button id="reopen-button" className="button red" onClick={() => reopenChatForMe(chatId)}>Reopen Chat</button>;
+        button = <button id="reopen-button" className="button red" onClick={() => handleReopen(chatId)}>Reopen Chat</button>;
     }
     return (
         <div>
@@ -73,7 +82,7 @@ function ActiveChatButton({ chatId, closedForMe }) {
     )
 }
 
-export default function Chat({ chatId, chatTitle, chatActive }) {
+export default function Chat({ chatId, chatTitle, chatActive, rerender }) {
 		const selfId = auth.currentUser?.uid;
 
 		if (chatActive && chatId) {
@@ -123,7 +132,7 @@ export default function Chat({ chatId, chatTitle, chatActive }) {
                     <div id="messages-header">
                         <div></div>
                         <Link to={"/listing?id=" + chatId.split("__")[0]}>{chatTitle}</Link>
-                        <ActiveChatButton chatId={chatId} closedForMe={closedForMe}/>
+                        <ActiveChatButton chatId={chatId} closedForMe={closedForMe} rerender={rerender}/>
                     </div>
                     <Messages chatId={chatId} selfId={selfId} closed={closedForMe} />
                     {messageInput}

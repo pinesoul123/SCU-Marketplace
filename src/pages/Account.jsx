@@ -3,11 +3,13 @@ import { useEffect, useState } from "react"
 import ListingCard from "../components/ListingCard.jsx"
 import { getMyListings } from "../api/account";
 import { auth } from "../lib/firebase";
+import { useAuth } from "../lib/AuthProvider";
 import {  signOut } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Account.css";
 
 function AccountInfo() {
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   async function handleSignOut() {
     await signOut(auth);
@@ -19,12 +21,15 @@ function AccountInfo() {
     <div id="account-info-container">
       <h1>Account</h1>
       <div id="account-info">
-        Name
-        Email
+        {user && (
+          <p style={{ marginTop: 16 }}>
+            <strong>{user.email}</strong>
+          </p>
+        )}
       </div>
       <Link to="/saved"><button className="button" >Saved Listings</button></Link>
       <Link to="/messages"><button className="button" >Messages</button></Link>
-      <button className="button">Edit Account Info</button>
+      {/* <button className="button">Edit Account Info</button> */}
       <button className="button" onClick={handleSignOut}>Log Out</button>
     </div>
   )

@@ -22,11 +22,7 @@
   margin-top: 0;
 }
 
-.create-request-button {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
-}
+
 
 #popup-container.request-popup {
     position: fixed;

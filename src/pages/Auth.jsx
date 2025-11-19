@@ -33,7 +33,6 @@ export default function Auth() {
   async function handleSignUp() {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      setUser(userCred.user);
       navigate("/");
     } catch {
       setSignInError(true);

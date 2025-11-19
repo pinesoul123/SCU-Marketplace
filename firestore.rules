@@ -3,6 +3,23 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
     function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(db)/documents/roles/$(request.auth.uid))
+        && (
+          get(/databases/$(db)/documents/roles/$(request.auth.uid)).data.role == 'admin' ||
+          get(/databases/$(db)/documents/roles/$(request.auth.uid)).data.isAdmin == true ||
+          get(/databases/$(db)/documents/roles/$(request.auth.uid)).data.admin == true
+        );
+    }
+    function canModerateListings() {
+      return isAdmin()
+        || (
+          request.auth != null
+          && exists(/databases/$(db)/documents/roles/$(request.auth.uid))
+          && get(/databases/$(db)/documents/roles/$(request.auth.uid)).data.canModerateListings == true
+        );
+    }
 
     // ----- LISTINGS -----
     match /listings/{id} {
@@ -25,12 +42,31 @@ service cloud.firestore {
         && (request.resource.data.updatedAt is timestamp);
 
       allow delete: if signedIn()
-        && (resource.data.sellerID == request.auth.uid);
+        && (resource.data.sellerID == request.auth.uid || canModerateListings());
     }
 
     // Support capitalized Listings if some docs live there
     match /Listings/{id} {
+      // Public read so the client can resolve sellerID
       allow read: if true;
+
+      allow create: if signedIn()
+        && request.resource.data.sellerID == request.auth.uid
+        && request.resource.data.price is number
+        && request.resource.data.price >= 0
+        && (request.resource.data.status in ['active','pending'])
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp;
+
+      allow update: if signedIn()
+        && (resource.data.sellerID == request.auth.uid)
+        && request.resource.data.sellerID == resource.data.sellerID
+        && ((('price' in request.resource.data) ? (request.resource.data.price is number && request.resource.data.price >= 0) : true))
+        && ((('status' in request.resource.data) ? (request.resource.data.status in ['active','pending','sold','removed']) : true))
+        && (request.resource.data.updatedAt is timestamp);
+
+      allow delete: if signedIn()
+        && (resource.data.sellerID == request.auth.uid || canModerateListings());
     }
 
     // ----- ROLES -----  (unchanged)

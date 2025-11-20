@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import "../styles/Filter.css";
 
 const categories = ["Furniture", "Appliances", "Books", "Clothes", "Other"];
 const conditions = ["New", "Used - Very Good", "Used - Moderate"];
@@ -125,92 +126,98 @@ export default function FilterPopup({ show, onClose }) {
   if (!show) return null;
 
   return (
-    <div id="popup-container" style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
-      <div id="popup-bg" onClick={onClose}></div>
-      <div id="popup" style={{ maxWidth: "800px", minHeight: "600px", maxHeight: "80vh", overflowY: "auto", textAlign: "left" }}>
-        <h2>Filters</h2>
-        
-        <div id="filter-buttons-container">
-          <button type="button" className="button red" onClick={handleApply}>
-            Apply Filters
-          </button>
-          <button type="button" className="button" onClick={handleClear}>
-            Clear All
-          </button>
-          <button type="button" className="button" onClick={onClose}>
-            Cancel
-          </button>
-        </div>
-
-        <div>
-          <h3>Category</h3>
-          {categories.map(cat => (
-            <label key={cat} style={{ display: "block" }}>
-              <input
-                type="checkbox"
-                checked={selectedCategories.includes(cat)}
-                onChange={() => handleCategoryToggle(cat)}
-              />
-              {cat}
-            </label>
-          ))}
-        </div>
-
-        <div>
-          <h3>Price</h3>
-          <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
-            <input
-              type="number"
-              placeholder="Min"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              className="textbox"
-              style={{ width: "80px" }}
-              min="0"
-              step="0.01"
-            />
-            <span>to</span>
-            <input
-              type="number"
-              placeholder="Max"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              className="textbox"
-              style={{ width: "80px" }}
-              min="0"
-              step="0.01"
-            />
+    <div id="filter-container">
+      <div id="popup-container" style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
+        <div id="popup-bg" onClick={onClose}></div>
+        <div id="popup" style={{ maxWidth: "800px", minHeight: "600px", maxHeight: "80vh", overflowY: "auto", textAlign: "left" }}>
+          <h2>Filters</h2>
+          
+          <div id="filter-buttons-container">
+            <button type="button" className="button red" onClick={handleApply}>
+              Apply Filters
+            </button>
+            <button type="button" className="button" onClick={handleClear}>
+              Clear All
+            </button>
+            <button type="button" className="button" onClick={onClose}>
+              Cancel
+            </button>
           </div>
-        </div>
 
-        <div>
-          <h3>Condition</h3>
-          {conditions.map(cond => (
-            <label key={cond} style={{ display: "block" }}>
-              <input
-                type="checkbox"
-                checked={selectedConditions.includes(cond)}
-                onChange={() => handleConditionToggle(cond)}
-              />
-              {cond}
-            </label>
-          ))}
-        </div>
+          <div id="filter-select">
+            <div>
+              <h3>Category</h3>
+              {categories.map(cat => (
+                <label key={cat} style={{ display: "block" }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(cat)}
+                    onChange={() => handleCategoryToggle(cat)}
+                  />
+                  {cat}
+                </label>
+              ))}
+            </div>
 
-        <div>
-          <h3>Location</h3>
-          {locations.map(loc => (
-            <label key={loc} style={{ display: "block" }}>
-              <input
-                type="checkbox"
-                checked={selectedLocations.includes(loc)}
-                onChange={() => handleLocationToggle(loc)}
-              />
-              {loc}
-            </label>
-          ))}
-        </div>
+            <div>
+              <h3>Price</h3>
+              <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
+                <input
+                  type="number"
+                  placeholder="Min"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  className="textbox"
+                  style={{ width: "80px" }}
+                  min="0"
+                  step="0.01"
+                />
+                <span>to</span>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  className="textbox"
+                  style={{ width: "80px" }}
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+            </div>
 
+            <div>
+              <h3>Location</h3>
+              <div id="location-options">
+                {locations.map(loc => (
+                  <label key={loc} style={{ display: "block" }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedLocations.includes(loc)}
+                      onChange={() => handleLocationToggle(loc)}
+                    />
+                    {loc}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3>Condition</h3>
+              {conditions.map(cond => (
+                <label key={cond} style={{ display: "block" }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedConditions.includes(cond)}
+                    onChange={() => handleConditionToggle(cond)}
+                  />
+                  {cond}
+                </label>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );

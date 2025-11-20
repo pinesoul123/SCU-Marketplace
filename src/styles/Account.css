@@ -26,6 +26,10 @@
     gap: 10px;
 }
 
+#account-listings-container .button {
+    height: min-content;
+}
+
 .listing-card-image-container {
     height: 18vw;
 }

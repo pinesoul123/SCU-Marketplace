@@ -234,10 +234,10 @@ export default function RequestBoards() {
 	return (
 		<div id="content">
 			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", marginTop: "20px" }}>
-				<h1 style={{ margin: 0 }}>Request Boards</h1>
-				<div>
-					<button className="button white" onClick={() => setShowDeleteForm(true)}>Delete Requests</button>
-					<button className="button red create-request-button" onClick={() => setShowForm(true)}>Create Request</button>
+				<h1>Request Boards</h1>
+				<div style={{ display: "flex", gap: "10px" }}>
+						<button className="button white" onClick={() => setShowDeleteForm(true)}>Delete Requests</button>
+						<button className="button red create-request-button" onClick={() => setShowForm(true)}>Create Request</button>
 				</div>
 			</div>
 			<CreateRequestForm show={showForm} onClose={() => {

@@ -41,10 +41,10 @@ export default function FilterPopup({ show, onClose }) {
   const [maxPrice, setMaxPrice] = useState(() => searchParams.get("maxPrice") || "");
 
   // Locations
-  const [selectedLocations, setSelectedLocations] = useState(() => {
-    const locs = searchParams.get("location");
-    return locs ? locs.split(",") : [];
-  });
+  // const [selectedLocations, setSelectedLocations] = useState(() => {
+  //   const locs = searchParams.get("location");
+  //   return locs ? locs.split(",") : [];
+  // });
 
 
 
@@ -56,9 +56,9 @@ export default function FilterPopup({ show, onClose }) {
     setSelectedConditions(prev => prev.includes(condition) ? prev.filter(c => c !== condition): [...prev, condition]);
   };
 
-  const handleLocationToggle = (location) => {
-    setSelectedLocations(prev => prev.includes(location) ? prev.filter(l => l !== location): [...prev, location]);
-  };
+  // const handleLocationToggle = (location) => {
+  //   setSelectedLocations(prev => prev.includes(location) ? prev.filter(l => l !== location): [...prev, location]);
+  // };
 
 
 
@@ -95,11 +95,11 @@ export default function FilterPopup({ show, onClose }) {
     }
     
     // Updates location filter
-    if (selectedLocations.length > 0) {
-      params.set("location", selectedLocations.join(","));
-    } else {
-      params.delete("location");
-    }
+    // if (selectedLocations.length > 0) {
+    //   params.set("location", selectedLocations.join(","));
+    // } else {
+    //   params.delete("location");
+    // }
     
     navigate(`/market?${params.toString()}`);
     onClose();
@@ -111,14 +111,14 @@ export default function FilterPopup({ show, onClose }) {
     setSelectedConditions([]);
     setMinPrice("");
     setMaxPrice("");
-    setSelectedLocations([]);
+    // setSelectedLocations([]);
     
     const params = new URLSearchParams(searchParams);
     params.delete("category");
     params.delete("condition");
     params.delete("minPrice");
     params.delete("maxPrice");
-    params.delete("location");
+    // params.delete("location");
     
     navigate(`/market?${params.toString()}`);
   };
@@ -186,7 +186,7 @@ export default function FilterPopup({ show, onClose }) {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h3>Location</h3>
               <div id="location-options">
                 {locations.map(loc => (
@@ -200,7 +200,7 @@ export default function FilterPopup({ show, onClose }) {
                   </label>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             <div>
               <h3>Condition</h3>

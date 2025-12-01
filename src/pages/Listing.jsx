@@ -192,7 +192,6 @@ export default function Listing() {
     }
     const listingData = listingDoc.listing;
     const isMyListing = (user.uid == listingDoc.listing.sellerID);
-    const admin = isAdmin(user.uid);
 
    async function handleMessage() {
         try {
@@ -225,7 +224,7 @@ export default function Listing() {
                             <SaveButton listingId={listingId} />
                         </>
                     }
-                    { (isMyListing || admin) && <button className="button" onClick={handleRemove}>Remove</button>}
+                    { isMyListing && <button className="button" onClick={handleRemove}>Remove</button>}
                 </div>
             </div>
         </div>

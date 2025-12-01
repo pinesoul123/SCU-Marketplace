@@ -56,6 +56,8 @@ async function analyzeWithOpenAI(imageFile) {
                 - Describe what you see: brand, model, color, size, visible features
                 - Note any visible wear, damage, or condition issues
                 - Avoid subjective language like "perfect for", "great for", "excellent"
+                - Avoid lanuage that implies value judgments like "appears to be", "looks like", "seems to be"
+                - Do not make assumptions about how the item will be used for or its desirability
                 - Focus on observable facts about the item's appearance and condition
                 - Estimate market price based on similar items`
               },
